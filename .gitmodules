@@ -1,0 +1,6 @@
+[submodule "berkeley-softfloat-3"]
+	path = berkeley-softfloat-3
+	url = https://github.com/ucb-bar/berkeley-softfloat-3
+[submodule "SoftPosit"]
+	path = SoftPosit
+	url = https://gitlab.com/cerlane/SoftPosit

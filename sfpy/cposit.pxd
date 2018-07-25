@@ -1,6 +1,6 @@
 from libc.stdint cimport *
 
-cdef extern from 'SoftPosit/source/include/softposit.h':
+cdef extern from '../SoftPosit/source/include/softposit.h':
 
     ctypedef struct posit8_t:
         pass

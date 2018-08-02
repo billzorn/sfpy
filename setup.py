@@ -9,6 +9,12 @@ posit_ext = Extension(
     libraries=['m'],
 )
 
+float_ext = Extension(
+    'sfpy.float', ['sfpy/float.pyx'],
+    include_dirs=['berkeley-softfloat-3/source/include/'],
+    extra_objects=['./berkeley-softfloat-3/build/Linux-x86_64-GCC/softfloat.a'],
+)
+
 setup(
     name='sfpy',
     version='0.1.0',
@@ -17,5 +23,5 @@ setup(
     author_email='bill.zorn@gmail.com',
     url='https://github.com/billzorn/sfpy',
     packages=['sfpy'],
-    ext_modules=cythonize([posit_ext]),
+    ext_modules=cythonize([posit_ext, float_ext]),
 )

@@ -73,7 +73,7 @@ cdef class Posit8:
         return Posit8.from_c_posit(f)
 
     def __round__(self):
-        return self.roundToInt()
+        return self.round()
 
     cpdef Posit8 add(self, Posit8 other):
         cdef cposit.posit8_t f = cposit.p8_add(self._c_posit, other._c_posit)
@@ -407,7 +407,7 @@ cdef class Posit16:
         return Posit16.from_c_posit(f)
 
     def __round__(self):
-        return self.roundToInt()
+        return self.round()
 
     cpdef Posit16 add(self, Posit16 other):
         cdef cposit.posit16_t f = cposit.p16_add(self._c_posit, other._c_posit)

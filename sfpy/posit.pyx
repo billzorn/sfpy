@@ -243,7 +243,7 @@ cdef class Posit8:
 
     cpdef to_quire(self):
         cdef cposit.quire8_t f
-        cposit.q8_clr(f)
+        f = cposit.q8_clr(f)
         f = cposit.q8_fdp_add(f, self._c_posit, _p8_one)
         return Quire8.from_c_quire(f)
 
@@ -280,7 +280,7 @@ cdef class Quire8:
             self._c_quire.v = value
         else:
             f = float(value)
-            cposit.q8_clr(self._c_quire)
+            self._c_quire = cposit.q8_clr(self._c_quire)
             self._c_quire = cposit.q8_fdp_add(self._c_quire, cposit.convertDoubleToP8(f), _p8_one)
 
     def __float__(self):
@@ -316,7 +316,7 @@ cdef class Quire8:
         self._c_quire = cposit.q8_fdp_sub(self._c_quire, a1._c_posit, a2._c_posit)
 
     cpdef void iclr(self):
-        cposit.q8_clr(self._c_quire)
+        self._c_quire = cposit.q8_clr(self._c_quire)
 
     # conversion back to posit
 
@@ -386,7 +386,7 @@ cpdef Posit32 p8_to_p32(Posit8 a1):
 
 cpdef Quire8 p8_to_q8(Posit8 a1):
     cdef cposit.quire8_t f
-    cposit.q8_clr(f)
+    f = cposit.q8_clr(f)
     f = cposit.q8_fdp_add(f, a1._c_posit, _p8_one)
     return Quire8.from_c_quire(f)
 
@@ -613,7 +613,7 @@ cdef class Posit16:
 
     cpdef to_quire(self):
         cdef cposit.quire16_t f
-        cposit.q16_clr(f)
+        f = cposit.q16_clr(f)
         f = cposit.q16_fdp_add(f, self._c_posit, _p16_one)
         return Quire16.from_c_quire(f)
 
@@ -664,7 +664,7 @@ cdef class Quire16:
                 raise OverflowError('value too large to fit in uint64_t[2]')
         else:
             f = float(value)
-            cposit.q16_clr(self._c_quire)
+            self._c_quire = cposit.q16_clr(self._c_quire)
             self._c_quire = cposit.q16_fdp_add(self._c_quire, cposit.convertDoubleToP16(f), _p16_one)
 
     def __float__(self):
@@ -704,7 +704,7 @@ cdef class Quire16:
         self._c_quire = cposit.q16_fdp_sub(self._c_quire, a1._c_posit, a2._c_posit)
 
     cpdef void iclr(self):
-        cposit.q16_clr(self._c_quire)
+        self._c_quire = cposit.q16_clr(self._c_quire)
 
     # conversion back to posit
 
@@ -774,7 +774,7 @@ cpdef Posit32 p16_to_p32(Posit16 a1):
 
 cpdef Quire16 p16_to_q16(Posit16 a1):
     cdef cposit.quire16_t f
-    cposit.q16_clr(f)
+    f = cposit.q16_clr(f)
     f = cposit.q16_fdp_add(f, a1._c_posit, _p16_one)
     return Quire16.from_c_quire(f)
 
@@ -1001,7 +1001,7 @@ cdef class Posit32:
 
     cpdef to_quire(self):
         cdef cposit.quire32_t f
-        cposit.q32_clr(f)
+        f = cposit.q32_clr(f)
         f = cposit.q32_fdp_add(f, self._c_posit, _p32_one)
         return Quire32.from_c_quire(f)
 
@@ -1045,14 +1045,14 @@ cdef class Quire32:
 
     def __init__(self, value):
         if isinstance(value, int):
-            for idx in range(1, -1, -1):
+            for idx in range(7, -1, -1):
                 self._c_quire.v[idx] = value & 0xffffffffffffffff
                 value >>= 64
             if not (value == 0):
                 raise OverflowError('value too large to fit in uint64_t[2]')
         else:
             f = float(value)
-            cposit.q32_clr(self._c_quire)
+            self._c_quire = cposit.q32_clr(self._c_quire)
             self._c_quire = cposit.q32_fdp_add(self._c_quire, cposit.convertDoubleToP32(f), _p32_one)
 
     def __float__(self):
@@ -1092,7 +1092,7 @@ cdef class Quire32:
         self._c_quire = cposit.q32_fdp_sub(self._c_quire, a1._c_posit, a2._c_posit)
 
     cpdef void iclr(self):
-        cposit.q32_clr(self._c_quire)
+        self._c_quire = cposit.q32_clr(self._c_quire)
 
     # conversion back to posit
 
@@ -1162,7 +1162,7 @@ cpdef Posit16 p32_to_p16(Posit32 a1):
 
 cpdef Quire32 p32_to_q32(Posit32 a1):
     cdef cposit.quire32_t f
-    cposit.q32_clr(f)
+    f = cposit.q32_clr(f)
     f = cposit.q32_fdp_add(f, a1._c_posit, _p32_one)
     return Quire32.from_c_quire(f)
 

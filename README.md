@@ -23,10 +23,10 @@ Posit16(2.7001953125)
 >>> q = sfpy.Quire16(0) # <-- quire is also supported
 >>> q
 Quire16(0.0)
->>> q.iqma(sfpy.Posit16(3), sfpy.Posit16(5))
+>>> q.iqam(sfpy.Posit16(3), sfpy.Posit16(5))
 >>> q
 Quire16(3.725290298461914e-09)
->>> q.iqma(sfpy.Posit16(3.0), sfpy.Posit16(5.0))
+>>> q.iqam(sfpy.Posit16(3.0), sfpy.Posit16(5.0))
 >>> q
 Quire16(15.0)
 >>> q.bits

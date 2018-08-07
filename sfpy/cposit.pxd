@@ -62,22 +62,22 @@ cdef extern from '../SoftPosit/source/include/softposit.h':
 
     posit8_t  ui32_to_p8( uint32_t );
     posit16_t ui32_to_p16( uint32_t );
-    # posit32_t ui32_to_p32( uint32_t );
+    posit32_t ui32_to_p32( uint32_t );
     # posit64_t ui32_to_p64( uint32_t );
 
     posit8_t  ui64_to_p8( uint64_t );
     posit16_t ui64_to_p16( uint64_t );
-    # posit32_t ui64_to_p32( uint64_t );
+    posit32_t ui64_to_p32( uint64_t );
     # posit64_t ui64_to_p64( uint64_t );
 
     posit8_t  i32_to_p8( int32_t );
     posit16_t i32_to_p16( int32_t );
-    # posit32_t i32_to_p32( int32_t );
+    posit32_t i32_to_p32( int32_t );
     # posit64_t i32_to_p64( int32_t );
 
     posit8_t  i64_to_p8( int64_t );
     posit16_t i64_to_p16( int64_t );
-    # posit32_t i64_to_p32( int64_t );
+    posit32_t i64_to_p32( int64_t );
     # posit64_t i64_to_p64( int64_t );
 
     # /*----------------------------------------------------------------------------
@@ -92,7 +92,7 @@ cdef extern from '../SoftPosit/source/include/softposit.h':
     int_fast64_t p8_to_i64( posit8_t );
 
     posit16_t p8_to_p16( posit8_t );
-    # posit32_t p8_to_p32( posit8_t );
+    posit32_t p8_to_p32( posit8_t );
     # posit64_t p8_to_p64( posit8_t );
 
     posit8_t p8_roundToInt( posit8_t );
@@ -134,7 +134,7 @@ cdef extern from '../SoftPosit/source/include/softposit.h':
     int_fast32_t p16_to_i32( posit16_t);
     int_fast64_t p16_to_i64( posit16_t );
     posit8_t p16_to_p8( posit16_t );
-    # posit32_t p16_to_p32( posit16_t );
+    posit32_t p16_to_p32( posit16_t );
     # posit64_t p16_to_p64( posit16_t );
 
     posit16_t p16_roundToInt( posit16_t);
@@ -156,7 +156,7 @@ cdef extern from '../SoftPosit/source/include/softposit.h':
 
     bint isNaRQ16( quire16_t );
     bint isQ16Zero( quire16_t );
-    # quire16_t q16_TwosComplement( quire16_t );
+    quire16_t q16_TwosComplement( quire16_t );
 
     # void printBinary( uint64_t*, int );
     # void printHex( uint64_t );
@@ -171,3 +171,46 @@ cdef extern from '../SoftPosit/source/include/softposit.h':
     double convertP16ToDouble( posit16_t );
     # posit16_t convertFloatToP16( float );
     posit16_t convertDoubleToP16( double );
+
+    # /*----------------------------------------------------------------------------
+    # | 32-bit (single-precision) posit operations.
+    # *----------------------------------------------------------------------------*/
+
+    bint isNaRP32UI( posit32_t );
+
+    uint_fast32_t p32_to_ui32( posit32_t );
+    uint_fast64_t p32_to_ui64( posit32_t);
+    int_fast32_t p32_to_i32( posit32_t );
+    int_fast64_t p32_to_i64( posit32_t );
+    posit8_t p32_to_p8( posit32_t );
+    posit16_t p32_to_p16( posit32_t );
+    # posit64_t p32_to_p64( posit32_t );
+
+    posit32_t p32_roundToInt( posit32_t );
+    posit32_t p32_add( posit32_t, posit32_t );
+    posit32_t p32_sub( posit32_t, posit32_t );
+    posit32_t p32_mul( posit32_t, posit32_t );
+    posit32_t p32_mulAdd( posit32_t, posit32_t, posit32_t );
+    posit32_t p32_div( posit32_t, posit32_t );
+    posit32_t p32_sqrt( posit32_t );
+    bint p32_eq( posit32_t, posit32_t );
+    bint p32_le( posit32_t, posit32_t );
+    bint p32_lt( posit32_t, posit32_t );
+
+    quire32_t q32_fdp_add( quire32_t, posit32_t, posit32_t );
+    quire32_t q32_fdp_sub( quire32_t, posit32_t, posit32_t );
+    posit32_t q32_to_p32( quire32_t );
+
+    bint isNaRQ32( quire32_t );
+    bint isQ32Zero( quire32_t );
+    quire32_t q32_TwosComplement( quire32_t );
+    quire32_t q32_clr( quire32_t );
+    quire32_t q32Clr();
+    quire32_t castQ32( uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, uint64_t );
+    posit32_t castP32( uint32_t );
+    posit32_t negP32( posit32_t );
+
+    # Helper
+    double convertP32ToDouble( posit32_t );
+    # posit32_t convertFloatToP32(float);
+    posit32_t convertDoubleToP32( double );

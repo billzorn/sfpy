@@ -6,6 +6,7 @@ cimport cposit
 
 cdef _p8_one = cposit.ui32_to_p8(1)
 cdef _p16_one = cposit.ui32_to_p16(1)
+cdef _p32_one = cposit.ui32_to_p32(1)
 
 cdef inline cposit.posit8_t _p8_neg(cposit.posit8_t f):
     f.v = -f.v
@@ -15,12 +16,20 @@ cdef inline cposit.posit16_t _p16_neg(cposit.posit16_t f):
     f.v = -f.v
     return f
 
+cdef inline cposit.posit32_t _p32_neg(cposit.posit32_t f):
+    f.v = -f.v
+    return f
+
 cdef inline cposit.posit8_t _p8_abs(cposit.posit8_t f):
     f.v = <uint8_t> abs(<int8_t> f.v)
     return f
 
 cdef inline cposit.posit16_t _p16_abs(cposit.posit16_t f):
     f.v = <uint16_t> abs(<int16_t> f.v)
+    return f
+
+cdef inline cposit.posit32_t _p32_abs(cposit.posit32_t f):
+    f.v = <uint32_t> abs(<int32_t> f.v)
     return f
 
 
@@ -228,6 +237,10 @@ cdef class Posit8:
         cdef cposit.posit16_t f = cposit.p8_to_p16(self._c_posit)
         return Posit16.from_c_posit(f)
 
+    cpdef to_p32(self):
+        cdef cposit.posit32_t f = cposit.p8_to_p32(self._c_posit)
+        return Posit32.from_c_posit(f)
+
     cpdef to_quire(self):
         cdef cposit.quire8_t f
         cposit.q8_clr(f)
@@ -366,6 +379,10 @@ cpdef bint p8_lt(Posit8 a1, Posit8 a2):
 cpdef Posit16 p8_to_p16(Posit8 a1):
     cdef cposit.posit16_t f = cposit.p8_to_p16(a1._c_posit)
     return Posit16.from_c_posit(f)
+
+cpdef Posit32 p8_to_p32(Posit8 a1):
+    cdef cposit.posit32_t f = cposit.p8_to_p32(a1._c_posit)
+    return Posit32.from_c_posit(f)
 
 cpdef Quire8 p8_to_q8(Posit8 a1):
     cdef cposit.quire8_t f
@@ -590,6 +607,10 @@ cdef class Posit16:
         cdef cposit.posit8_t f = cposit.p16_to_p8(self._c_posit)
         return Posit8.from_c_posit(f)
 
+    cpdef to_p32(self):
+        cdef cposit.posit32_t f = cposit.p16_to_p32(self._c_posit)
+        return Posit32.from_c_posit(f)
+
     cpdef to_quire(self):
         cdef cposit.quire16_t f
         cposit.q16_clr(f)
@@ -747,6 +768,10 @@ cpdef Posit8 p16_to_p8(Posit16 a1):
     cdef cposit.posit8_t f = cposit.p16_to_p8(a1._c_posit)
     return Posit8.from_c_posit(f)
 
+cpdef Posit32 p16_to_p32(Posit16 a1):
+    cdef cposit.posit32_t f = cposit.p16_to_p32(a1._c_posit)
+    return Posit32.from_c_posit(f)
+
 cpdef Quire16 p16_to_q16(Posit16 a1):
     cdef cposit.quire16_t f
     cposit.q16_clr(f)
@@ -764,3 +789,391 @@ cpdef Quire16 q16_qsm(Quire16 a3, Posit16 a1, Posit16 a2):
 cpdef Posit16 q16_to_p16(Quire16 a1):
     cpdef cposit.posit16_t f = cposit.q16_to_p16(a1._c_quire)
     return Posit16.from_c_posit(f)
+
+
+cdef class Posit32:
+
+    # the wrapped posit value
+    cdef cposit.posit32_t _c_posit
+
+    # factory function constructors that bypass __init__
+
+    @staticmethod
+    cdef Posit32 from_c_posit(cposit.posit32_t f):
+        """Factory function to create a Posit32 object directly from
+        a C posit32_t.
+        """
+        cdef Posit32 obj = Posit32.__new__(Posit32)
+        obj._c_posit = f
+        return obj
+
+    @staticmethod
+    def from_bits(uint32_t value):
+        """Factory function to create a Posit32 object from a bit pattern
+        represented as an integer.
+        """
+        cdef Posit32 obj = Posit32.__new__(Posit32)
+        obj._c_posit.v = value
+        return obj
+
+    @staticmethod
+    def from_double(double value):
+        """Factory function to create a Posit32 object from a double.
+        """
+        cdef Posit32 obj = Posit32.__new__(Posit32)
+        obj._c_posit = cposit.convertDoubleToP32(value)
+        return obj
+
+    # convenience interface for use inside Python
+
+    def __init__(self, value):
+        if isinstance(value, int):
+            self._c_posit.v = value
+        else:
+            f = float(value)
+            self._c_posit = cposit.convertDoubleToP32(f)
+
+    def __float__(self):
+        return cposit.convertP32ToDouble(self._c_posit)
+
+    def __int__(self):
+        return int(cposit.convertP32ToDouble(self._c_posit))
+
+    def __str__(self):
+        return repr(cposit.convertP32ToDouble(self._c_posit))
+
+    def __repr__(self):
+        return 'Posit32(' + repr(cposit.convertP32ToDouble(self._c_posit)) + ')'
+
+    cpdef uint32_t get_bits(self):
+        return self._c_posit.v
+    bits = property(get_bits)
+
+    # arithmetic
+
+    cpdef Posit32 neg(self):
+        cdef cposit.posit32_t f = _p32_neg(self._c_posit)
+        return Posit32.from_c_posit(f)
+
+    def __neg__(self):
+        return self.neg()
+
+    cpdef Posit32 abs(self):
+        cdef cposit.posit32_t f = _p32_abs(self._c_posit)
+        return Posit32.from_c_posit(f)
+
+    def __abs__(self):
+        return self.abs()
+
+    cpdef Posit32 round(self):
+        cdef cposit.posit32_t f = cposit.p32_roundToInt(self._c_posit)
+        return Posit32.from_c_posit(f)
+
+    def __round__(self):
+        return self.round()
+
+    cpdef Posit32 add(self, Posit32 other):
+        cdef cposit.posit32_t f = cposit.p32_add(self._c_posit, other._c_posit)
+        return Posit32.from_c_posit(f)
+
+    def __add__(self, Posit32 other):
+        return self.add(other)
+
+    cpdef Posit32 sub(self, Posit32 other):
+        cdef cposit.posit32_t f = cposit.p32_sub(self._c_posit, other._c_posit)
+        return Posit32.from_c_posit(f)
+
+    def __sub__(self, Posit32 other):
+        return self.sub(other)
+
+    cpdef Posit32 mul(self, Posit32 other):
+        cdef cposit.posit32_t f = cposit.p32_mul(self._c_posit, other._c_posit)
+        return Posit32.from_c_posit(f)
+
+    def __mul__(self, Posit32 other):
+        return self.mul(other)
+
+    cpdef Posit32 fma(self, Posit32 a2, Posit32 a3):
+        cdef cposit.posit32_t f = cposit.p32_mulAdd(self._c_posit, a2._c_posit, a3._c_posit)
+        return Posit32.from_c_posit(f)
+
+    cpdef Posit32 fam(self, Posit32 a1, Posit32 a2):
+        cdef cposit.posit32_t f = cposit.p32_mulAdd(a1._c_posit, a2._c_posit, self._c_posit)
+        return Posit32.from_c_posit(f)
+
+    cpdef Posit32 div(self, Posit32 other):
+        cdef cposit.posit32_t f = cposit.p32_div(self._c_posit, other._c_posit)
+        return Posit32.from_c_posit(f)
+
+    def __truediv__(self, Posit32 other):
+        return self.div(other)
+
+    cpdef Posit32 sqrt(self):
+        cdef cposit.posit32_t f = cposit.p32_sqrt(self._c_posit)
+        return Posit32.from_c_posit(f)
+
+    # in-place arithmetic
+
+    cpdef void ineg(self):
+        self._c_posit = _p32_neg(self._c_posit)
+
+    cpdef void iabs(self):
+        self._c_posit = _p32_abs(self._c_posit)
+
+    cpdef void iround(self):
+        self._c_posit = cposit.p32_roundToInt(self._c_posit)
+
+    cpdef void iadd(self, Posit32 other):
+        self._c_posit = cposit.p32_add(self._c_posit, other._c_posit)
+
+    def __iadd__(self, Posit32 other):
+        self.iadd(other)
+        return self
+
+    cpdef void isub(self, Posit32 other):
+        self._c_posit = cposit.p32_sub(self._c_posit, other._c_posit)
+
+    def __isub__(self, Posit32 other):
+        self.isub(other)
+        return self
+
+    cpdef void imul(self, Posit32 other):
+        self._c_posit = cposit.p32_mul(self._c_posit, other._c_posit)
+
+    def __imul__(self, Posit32 other):
+        self.imul(other)
+        return self
+
+    cpdef void ifma(self, Posit32 a2, Posit32 a3):
+        self._c_posit = cposit.p32_mulAdd(self._c_posit, a2._c_posit, a3._c_posit)
+
+    cpdef void ifam(self, Posit32 a1, Posit32 a2):
+        self._c_posit = cposit.p32_mulAdd(a1._c_posit, a2._c_posit, self._c_posit)
+
+    cpdef void idiv(self, Posit32 other):
+        self._c_posit = cposit.p32_div(self._c_posit, other._c_posit)
+
+    def __itruediv__(self, Posit32 other):
+        self.idiv(other)
+        return self
+
+    cpdef void isqrt(self):
+        self._c_posit = cposit.p32_sqrt(self._c_posit)
+
+    # comparison
+
+    cpdef bint eq(self, Posit32 other):
+        return cposit.p32_eq(self._c_posit, other._c_posit)
+
+    cpdef bint le(self, Posit32 other):
+        return cposit.p32_le(self._c_posit, other._c_posit)
+
+    cpdef bint lt(self, Posit32 other):
+        return cposit.p32_lt(self._c_posit, other._c_posit)
+
+    def __lt__(self, Posit32 other):
+        return self.lt(other)
+
+    def __le__(self, Posit32 other):
+        return self.le(other)
+
+    def __eq__(self, Posit32 other):
+        return self.eq(other)
+
+    def __ne__(self, Posit32 other):
+        return not self.eq(other)
+
+    def __ge__(self, Posit32 other):
+        return other.le(self)
+
+    def __gt__(self, Posit32 other):
+        return other.lt(self)
+
+    # conversion to other posit types
+
+    cpdef to_p8(self):
+        cdef cposit.posit8_t f = cposit.p32_to_p8(self._c_posit)
+        return Posit8.from_c_posit(f)
+
+    cpdef to_p16(self):
+        cdef cposit.posit16_t f = cposit.p32_to_p16(self._c_posit)
+        return Posit16.from_c_posit(f)
+
+    cpdef to_quire(self):
+        cdef cposit.quire32_t f
+        cposit.q32_clr(f)
+        f = cposit.q32_fdp_add(f, self._c_posit, _p32_one)
+        return Quire32.from_c_quire(f)
+
+
+cdef class Quire32:
+
+    # the wrapped quire value
+    cdef cposit.quire32_t _c_quire
+
+    # factory function constructors that bypass init
+
+    @staticmethod
+    cdef Quire32 from_c_quire(cposit.quire32_t f):
+        """Factory function to create a Quire32 object directly from
+        a C quire32_t.
+        """
+        cdef Quire32 obj = Quire32.__new__(Quire32)
+        obj._c_quire = f
+        return obj
+
+    @staticmethod
+    def from_bits(value):
+        """Factory function to create a Quire32 object from a bit pattern
+        represented as an integer.
+        """
+        cdef Quire32 obj = Quire32.__new__(Quire32)
+
+        if not isinstance(value, int):
+            raise TypeError('expecting int, got {}'.format(repr(value)))
+
+        for idx in range(1, -1, -1):
+            obj._c_quire.v[idx] = value & 0xffffffffffffffff
+            value >>= 64
+
+        if not (value == 0):
+            raise OverflowError('value too large to fit in uint64_t[2]')
+
+        return obj
+
+    # convenience interface for use inside Python
+
+    def __init__(self, value):
+        if isinstance(value, int):
+            for idx in range(1, -1, -1):
+                self._c_quire.v[idx] = value & 0xffffffffffffffff
+                value >>= 64
+            if not (value == 0):
+                raise OverflowError('value too large to fit in uint64_t[2]')
+        else:
+            f = float(value)
+            cposit.q32_clr(self._c_quire)
+            self._c_quire = cposit.q32_fdp_add(self._c_quire, cposit.convertDoubleToP32(f), _p32_one)
+
+    def __float__(self):
+        return cposit.convertP32ToDouble(cposit.q32_to_p32(self._c_quire))
+
+    def __int__(self):
+        return int(cposit.convertP32ToDouble(cposit.q32_to_p32(self._c_quire)))
+
+    def __str__(self):
+        return repr(cposit.convertP32ToDouble(cposit.q32_to_p32(self._c_quire)))
+
+    def __repr__(self):
+        return 'Quire32(' + repr(cposit.convertP32ToDouble(cposit.q32_to_p32(self._c_quire))) + ')'
+
+    def get_bits(self):
+        b = 0
+        for u in self._c_quire.v:
+            b <<= 64
+            b |= u
+        return b
+    bits = property(get_bits)
+
+    # arithmetic
+
+    cpdef Quire32 qam(self, Posit32 a1, Posit32 a2):
+        cdef cposit.quire32_t f = cposit.q32_fdp_add(self._c_quire, a1._c_posit, a2._c_posit)
+        return Quire32.from_c_quire(f)
+
+    cpdef Quire32 qsm(self, Posit32 a1, Posit32 a2):
+        cdef cposit.quire32_t f = cposit.q32_fdp_sub(self._c_quire, a1._c_posit, a2._c_posit)
+        return Quire32.from_c_quire(f)
+
+    cpdef void iqam(self, Posit32 a1, Posit32 a2):
+        self._c_quire = cposit.q32_fdp_add(self._c_quire, a1._c_posit, a2._c_posit)
+
+    cpdef void iqsm(self, Posit32 a1, Posit32 a2):
+        self._c_quire = cposit.q32_fdp_sub(self._c_quire, a1._c_posit, a2._c_posit)
+
+    cpdef void iclr(self):
+        cposit.q32_clr(self._c_quire)
+
+    # conversion back to posit
+
+    cpdef Posit32 to_posit(self):
+        cpdef cposit.posit32_t f = cposit.q32_to_p32(self._c_quire)
+        return Posit32.from_c_posit(f)
+
+
+# external, non-method arithmetic
+
+cpdef Posit32 p32_neg(Posit32 a1):
+    cdef cposit.posit32_t f = _p32_neg(a1._c_posit)
+    return Posit32.from_c_posit(f)
+
+cpdef Posit32 p32_abs(Posit32 a1):
+    cdef cposit.posit32_t f = _p32_abs(a1._c_posit)
+    return Posit32.from_c_posit(f)
+
+cpdef Posit32 p32_round(Posit32 a1):
+    cdef cposit.posit32_t f = cposit.p32_roundToInt(a1._c_posit)
+    return Posit32.from_c_posit(f)
+
+cpdef Posit32 p32_add(Posit32 a1, Posit32 a2):
+    cdef cposit.posit32_t f = cposit.p32_add(a1._c_posit, a2._c_posit)
+    return Posit32.from_c_posit(f)
+
+cpdef Posit32 p32_sub(Posit32 a1, Posit32 a2):
+    cdef cposit.posit32_t f = cposit.p32_sub(a1._c_posit, a2._c_posit)
+    return Posit32.from_c_posit(f)
+
+cpdef Posit32 p32_mul(Posit32 a1, Posit32 a2):
+    cdef cposit.posit32_t f = cposit.p32_mul(a1._c_posit, a2._c_posit)
+    return Posit32.from_c_posit(f)
+
+cpdef Posit32 p32_fma(Posit32 a1, Posit32 a2, Posit32 a3):
+    cdef cposit.posit32_t f = cposit.p32_mulAdd(a1._c_posit, a2._c_posit, a3._c_posit)
+    return Posit32.from_c_posit(f)
+
+cpdef Posit32 p32_fam(Posit32 a3, Posit32 a1, Posit32 a2):
+    cdef cposit.posit32_t f = cposit.p32_mulAdd(a1._c_posit, a2._c_posit, a3._c_posit)
+    return Posit32.from_c_posit(f)
+
+cpdef Posit32 p32_div(Posit32 a1, Posit32 a2):
+    cdef cposit.posit32_t f = cposit.p32_div(a1._c_posit, a2._c_posit)
+    return Posit32.from_c_posit(f)
+
+cpdef Posit32 p32_sqrt(Posit32 a1):
+    cdef cposit.posit32_t f = cposit.p32_sqrt(a1._c_posit)
+    return Posit32.from_c_posit(f)
+
+cpdef bint p32_eq(Posit32 a1, Posit32 a2):
+    return cposit.p32_eq(a1._c_posit, a2._c_posit)
+
+cpdef bint p32_le(Posit32 a1, Posit32 a2):
+    return cposit.p32_le(a1._c_posit, a2._c_posit)
+
+cpdef bint p32_lt(Posit32 a1, Posit32 a2):
+    return cposit.p32_lt(a1._c_posit, a2._c_posit)
+
+cpdef Posit8 p32_to_p8(Posit32 a1):
+    cdef cposit.posit8_t f = cposit.p32_to_p8(a1._c_posit)
+    return Posit8.from_c_posit(f)
+
+cpdef Posit16 p32_to_p16(Posit32 a1):
+    cdef cposit.posit16_t f = cposit.p32_to_p16(a1._c_posit)
+    return Posit16.from_c_posit(f)
+
+cpdef Quire32 p32_to_q32(Posit32 a1):
+    cdef cposit.quire32_t f
+    cposit.q32_clr(f)
+    f = cposit.q32_fdp_add(f, a1._c_posit, _p32_one)
+    return Quire32.from_c_quire(f)
+
+cpdef Quire32 q32_qam(Quire32 a3, Posit32 a1, Posit32 a2):
+    cdef cposit.quire32_t f = cposit.q32_fdp_add(a3._c_quire, a1._c_posit, a2._c_posit)
+    return Quire32.from_c_quire(f)
+
+cpdef Quire32 q32_qsm(Quire32 a3, Posit32 a1, Posit32 a2):
+    cdef cposit.quire32_t f = cposit.q32_fdp_sub(a3._c_quire, a1._c_posit, a2._c_posit)
+    return Quire32.from_c_quire(f)
+
+cpdef Posit32 q32_to_p32(Quire32 a1):
+    cpdef cposit.posit32_t f = cposit.q32_to_p32(a1._c_quire)
+    return Posit32.from_c_posit(f)

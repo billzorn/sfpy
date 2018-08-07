@@ -2,10 +2,26 @@ from libc.stdint cimport *
 cimport cposit
 
 
-# special values needed for some initializations
+# special values and C helpers
 
-cdef posit8_one = cposit.ui32_to_p8(1)
-cdef posit16_one = cposit.ui32_to_p16(1)
+cdef _p8_one = cposit.ui32_to_p8(1)
+cdef _p16_one = cposit.ui32_to_p16(1)
+
+cdef inline cposit.posit8_t _p8_neg(cposit.posit8_t f):
+    f.v = -f.v
+    return f
+
+cdef inline cposit.posit16_t _p16_neg(cposit.posit16_t f):
+    f.v = -f.v
+    return f
+
+cdef inline cposit.posit8_t _p8_abs(cposit.posit8_t f):
+    f.v = <uint8_t> abs(<int8_t> f.v)
+    return f
+
+cdef inline cposit.posit16_t _p16_abs(cposit.posit16_t f):
+    f.v = <uint16_t> abs(<int16_t> f.v)
+    return f
 
 
 cdef class Posit8:
@@ -68,6 +84,20 @@ cdef class Posit8:
 
     # arithmetic
 
+    cpdef Posit8 neg(self):
+        cdef cposit.posit8_t f = _p8_neg(self._c_posit)
+        return Posit8.from_c_posit(f)
+
+    def __neg__(self):
+        return self.neg()
+
+    cpdef Posit8 abs(self):
+        cdef cposit.posit8_t f = _p8_abs(self._c_posit)
+        return Posit8.from_c_posit(f)
+
+    def __abs__(self):
+        return self.abs()
+
     cpdef Posit8 round(self):
         cdef cposit.posit8_t f = cposit.p8_roundToInt(self._c_posit)
         return Posit8.from_c_posit(f)
@@ -116,6 +146,12 @@ cdef class Posit8:
         return Posit8.from_c_posit(f)
 
     # in-place arithmetic
+
+    cpdef void ineg(self):
+        self._c_posit = _p8_neg(self._c_posit)
+
+    cpdef void iabs(self):
+        self._c_posit = _p8_abs(self._c_posit)
 
     cpdef void iround(self):
         self._c_posit = cposit.p8_roundToInt(self._c_posit)
@@ -195,7 +231,7 @@ cdef class Posit8:
     cpdef to_quire(self):
         cdef cposit.quire8_t f
         cposit.q8_clr(f)
-        f = cposit.q8_fdp_add(f, self._c_posit, posit8_one)
+        f = cposit.q8_fdp_add(f, self._c_posit, _p8_one)
         return Quire8.from_c_quire(f)
 
 
@@ -232,7 +268,7 @@ cdef class Quire8:
         else:
             f = float(value)
             cposit.q8_clr(self._c_quire)
-            self._c_quire = cposit.q8_fdp_add(self._c_quire, cposit.convertDoubleToP8(f), posit8_one)
+            self._c_quire = cposit.q8_fdp_add(self._c_quire, cposit.convertDoubleToP8(f), _p8_one)
 
     def __float__(self):
         return cposit.convertP8ToDouble(cposit.q8_to_p8(self._c_quire))
@@ -277,6 +313,14 @@ cdef class Quire8:
 
 
 # external, non-method arithmetic
+
+cpdef Posit8 p8_neg(Posit8 a1):
+    cdef cposit.posit8_t f = _p8_neg(a1._c_posit)
+    return Posit8.from_c_posit(f)
+
+cpdef Posit8 p8_abs(Posit8 a1):
+    cdef cposit.posit8_t f = _p8_abs(a1._c_posit)
+    return Posit8.from_c_posit(f)
 
 cpdef Posit8 p8_round(Posit8 a1):
     cdef cposit.posit8_t f = cposit.p8_roundToInt(a1._c_posit)
@@ -326,7 +370,7 @@ cpdef Posit16 p8_to_p16(Posit8 a1):
 cpdef Quire8 p8_to_q8(Posit8 a1):
     cdef cposit.quire8_t f
     cposit.q8_clr(f)
-    f = cposit.q8_fdp_add(f, a1._c_posit, posit8_one)
+    f = cposit.q8_fdp_add(f, a1._c_posit, _p8_one)
     return Quire8.from_c_quire(f)
 
 cpdef Quire8 q8_qam(Quire8 a3, Posit8 a1, Posit8 a2):
@@ -402,6 +446,20 @@ cdef class Posit16:
 
     # arithmetic
 
+    cpdef Posit16 neg(self):
+        cdef cposit.posit16_t f = _p16_neg(self._c_posit)
+        return Posit16.from_c_posit(f)
+
+    def __neg__(self):
+        return self.neg()
+
+    cpdef Posit16 abs(self):
+        cdef cposit.posit16_t f = _p16_abs(self._c_posit)
+        return Posit16.from_c_posit(f)
+
+    def __abs__(self):
+        return self.abs()
+
     cpdef Posit16 round(self):
         cdef cposit.posit16_t f = cposit.p16_roundToInt(self._c_posit)
         return Posit16.from_c_posit(f)
@@ -450,6 +508,12 @@ cdef class Posit16:
         return Posit16.from_c_posit(f)
 
     # in-place arithmetic
+
+    cpdef void ineg(self):
+        self._c_posit = _p16_neg(self._c_posit)
+
+    cpdef void iabs(self):
+        self._c_posit = _p16_abs(self._c_posit)
 
     cpdef void iround(self):
         self._c_posit = cposit.p16_roundToInt(self._c_posit)
@@ -529,7 +593,7 @@ cdef class Posit16:
     cpdef to_quire(self):
         cdef cposit.quire16_t f
         cposit.q16_clr(f)
-        f = cposit.q16_fdp_add(f, self._c_posit, posit16_one)
+        f = cposit.q16_fdp_add(f, self._c_posit, _p16_one)
         return Quire16.from_c_quire(f)
 
 
@@ -580,7 +644,7 @@ cdef class Quire16:
         else:
             f = float(value)
             cposit.q16_clr(self._c_quire)
-            self._c_quire = cposit.q16_fdp_add(self._c_quire, cposit.convertDoubleToP16(f), posit16_one)
+            self._c_quire = cposit.q16_fdp_add(self._c_quire, cposit.convertDoubleToP16(f), _p16_one)
 
     def __float__(self):
         return cposit.convertP16ToDouble(cposit.q16_to_p16(self._c_quire))
@@ -630,6 +694,14 @@ cdef class Quire16:
 
 # external, non-method arithmetic
 
+cpdef Posit16 p16_neg(Posit16 a1):
+    cdef cposit.posit16_t f = _p16_neg(a1._c_posit)
+    return Posit16.from_c_posit(f)
+
+cpdef Posit16 p16_abs(Posit16 a1):
+    cdef cposit.posit16_t f = _p16_abs(a1._c_posit)
+    return Posit16.from_c_posit(f)
+
 cpdef Posit16 p16_round(Posit16 a1):
     cdef cposit.posit16_t f = cposit.p16_roundToInt(a1._c_posit)
     return Posit16.from_c_posit(f)
@@ -678,7 +750,7 @@ cpdef Posit8 p16_to_p8(Posit16 a1):
 cpdef Quire16 p16_to_q16(Posit16 a1):
     cdef cposit.quire16_t f
     cposit.q16_clr(f)
-    f = cposit.q16_fdp_add(f, a1._c_posit, posit16_one)
+    f = cposit.q16_fdp_add(f, a1._c_posit, _p16_one)
     return Quire16.from_c_quire(f)
 
 cpdef Quire16 q16_qam(Quire16 a3, Posit16 a1, Posit16 a2):

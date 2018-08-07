@@ -110,6 +110,33 @@ cpdef void flag_clear_invalid():
     cfloat.softfloat_exceptionFlags &= ~cfloat.softfloat_flag_invalid
 
 
+# C helpers
+
+cdef inline cfloat.float16_t _f16_neg(cfloat.float16_t f):
+    f.v ^= 0x8000
+    return f
+
+cdef inline cfloat.float32_t _f32_neg(cfloat.float32_t f):
+    f.v ^= 0x80000000
+    return f
+
+cdef inline cfloat.float64_t _f64_neg(cfloat.float64_t f):
+    f.v ^= 0x8000000000000000
+    return f
+
+cdef inline cfloat.float16_t _f16_abs(cfloat.float16_t f):
+    f.v &= 0x7fff
+    return f
+
+cdef inline cfloat.float32_t _f32_abs(cfloat.float32_t f):
+    f.v &= 0x7fffffff
+    return f
+
+cdef inline cfloat.float64_t _f64_abs(cfloat.float64_t f):
+    f.v &= 0x7fffffffffffffff
+    return f
+
+
 cdef class Float16:
 
     # the wrapped float value
@@ -188,6 +215,20 @@ cdef class Float16:
 
     # arithmetic
 
+    cpdef Float16 neg(self):
+        cdef cfloat.float16_t f = _f16_neg(self._c_float)
+        return Float16.from_c_float(f)
+
+    def __neg__(self):
+        return self.neg()
+
+    cpdef Float16 abs(self):
+        cdef cfloat.float16_t f = _f16_abs(self._c_float)
+        return Float16.from_c_float(f)
+
+    def __abs__(self):
+        return self.abs()
+
     cpdef Float16 round_to(self, uint_fast8_t rm, bint exact):
         cdef cfloat.float16_t f = cfloat.f16_roundToInt(self._c_float, rm, exact)
         return Float16.from_c_float(f)
@@ -244,6 +285,12 @@ cdef class Float16:
         return Float16.from_c_float(f)
 
     # in-place arithmetic
+
+    cpdef void ineg(self):
+        self._c_float = _f16_neg(self._c_float)
+
+    cpdef void iabs(self):
+        self._c_float = _f16_abs(self._c_float)
 
     cpdef void iround_to(self, uint_fast8_t rm, bint exact):
         self._c_float = cfloat.f16_roundToInt(self._c_float, rm, exact)
@@ -332,6 +379,14 @@ cdef class Float16:
 
 
 # external, non-method arithmetic
+
+cpdef Float16 f16_neg(Float16 a1):
+    cdef cfloat.float16_t f = _f16_neg(a1._c_float)
+    return Float16.from_c_float(f)
+
+cpdef Float16 f16_abs(Float16 a1):
+    cdef cfloat.float16_t f = _f16_abs(a1._c_float)
+    return Float16.from_c_float(f)
 
 cpdef Float16 f16_round_to(Float16 a1, uint_fast8_t rm, bint exact):
     cdef cfloat.float16_t f = cfloat.f16_roundToInt(a1._c_float, rm, exact)
@@ -469,6 +524,20 @@ cdef class Float32:
 
     # arithmetic
 
+    cpdef Float32 neg(self):
+        cdef cfloat.float32_t f = _f32_neg(self._c_float)
+        return Float32.from_c_float(f)
+
+    def __neg__(self):
+        return self.neg()
+
+    cpdef Float32 abs(self):
+        cdef cfloat.float32_t f = _f32_abs(self._c_float)
+        return Float32.from_c_float(f)
+
+    def __abs__(self):
+        return self.abs()
+
     cpdef Float32 round_to(self, uint_fast8_t rm, bint exact):
         cdef cfloat.float32_t f = cfloat.f32_roundToInt(self._c_float, rm, exact)
         return Float32.from_c_float(f)
@@ -525,6 +594,12 @@ cdef class Float32:
         return Float32.from_c_float(f)
 
     # in-place arithmetic
+
+    cpdef void ineg(self):
+        self._c_float = _f32_neg(self._c_float)
+
+    cpdef void iabs(self):
+        self._c_float = _f32_abs(self._c_float)
 
     cpdef void iround_to(self, uint_fast8_t rm, bint exact):
         self._c_float = cfloat.f32_roundToInt(self._c_float, rm, exact)
@@ -613,6 +688,14 @@ cdef class Float32:
 
 
 # external, non-method arithmetic
+
+cpdef Float32 f32_neg(Float32 a1):
+    cdef cfloat.float32_t f = _f32_neg(a1._c_float)
+    return Float32.from_c_float(f)
+
+cpdef Float32 f32_abs(Float32 a1):
+    cdef cfloat.float32_t f = _f32_abs(a1._c_float)
+    return Float32.from_c_float(f)
 
 cpdef Float32 f32_round_to(Float32 a1, uint_fast8_t rm, bint exact):
     cdef cfloat.float32_t f = cfloat.f32_roundToInt(a1._c_float, rm, exact)
@@ -748,6 +831,20 @@ cdef class Float64:
 
     # arithmetic
 
+    cpdef Float64 neg(self):
+        cdef cfloat.float64_t f = _f64_neg(self._c_float)
+        return Float64.from_c_float(f)
+
+    def __neg__(self):
+        return self.neg()
+
+    cpdef Float64 abs(self):
+        cdef cfloat.float64_t f = _f64_abs(self._c_float)
+        return Float64.from_c_float(f)
+
+    def __abs__(self):
+        return self.abs()
+
     cpdef Float64 round_to(self, uint_fast8_t rm, bint exact):
         cdef cfloat.float64_t f = cfloat.f64_roundToInt(self._c_float, rm, exact)
         return Float64.from_c_float(f)
@@ -804,6 +901,12 @@ cdef class Float64:
         return Float64.from_c_float(f)
 
     # in-place arithmetic
+
+    cpdef void ineg(self):
+        self._c_float = _f64_neg(self._c_float)
+
+    cpdef void iabs(self):
+        self._c_float = _f64_abs(self._c_float)
 
     cpdef void iround_to(self, uint_fast8_t rm, bint exact):
         self._c_float = cfloat.f64_roundToInt(self._c_float, rm, exact)
@@ -892,6 +995,14 @@ cdef class Float64:
 
 
 # external, non-method arithmetic
+
+cpdef Float64 f64_neg(Float64 a1):
+    cdef cfloat.float64_t f = _f64_neg(a1._c_float)
+    return Float64.from_c_float(f)
+
+cpdef Float64 f64_abs(Float64 a1):
+    cdef cfloat.float64_t f = _f64_abs(a1._c_float)
+    return Float64.from_c_float(f)
 
 cpdef Float64 f64_round_to(Float64 a1, uint_fast8_t rm, bint exact):
     cdef cfloat.float64_t f = cfloat.f64_roundToInt(a1._c_float, rm, exact)

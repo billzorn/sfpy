@@ -1032,12 +1032,12 @@ cdef class Quire32:
         if not isinstance(value, int):
             raise TypeError('expecting int, got {}'.format(repr(value)))
 
-        for idx in range(1, -1, -1):
+        for idx in range(7, -1, -1):
             obj._c_quire.v[idx] = value & 0xffffffffffffffff
             value >>= 64
 
         if not (value == 0):
-            raise OverflowError('value too large to fit in uint64_t[2]')
+            raise OverflowError('value too large to fit in uint64_t[8]')
 
         return obj
 
@@ -1049,7 +1049,7 @@ cdef class Quire32:
                 self._c_quire.v[idx] = value & 0xffffffffffffffff
                 value >>= 64
             if not (value == 0):
-                raise OverflowError('value too large to fit in uint64_t[2]')
+                raise OverflowError('value too large to fit in uint64_t[8]')
         else:
             f = float(value)
             self._c_quire = cposit.q32_clr(self._c_quire)

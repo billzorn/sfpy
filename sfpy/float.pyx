@@ -179,6 +179,10 @@ cdef class Float16:
     # convenience interface for use inside Python
 
     def __init__(self, value):
+        """Given an int, create a Float16 from the bitpattern represented by
+        that int. Otherwise, given some value, create a Float16 by rounding
+        float(value).
+        """
         cdef cfloat.ui64_double ud
         cdef cfloat.float64_t d
 
@@ -477,6 +481,10 @@ cdef class Float32:
     # convenience interface for use inside Python
 
     def __init__(self, value):
+        """Given an int, create a Float32 from the bitpattern represented by
+        that int. Otherwise, given some value, create a Float32 by rounding
+        float(value).
+        """
         cdef cfloat.ui64_double ud
         cdef cfloat.float64_t d
 
@@ -774,6 +782,10 @@ cdef class Float64:
     # convenience interface for use inside Python
 
     def __init__(self, value):
+        """Given an int, create a Float64 from the bitpattern represented by
+        that int. Otherwise, given some value, create a Float64 from
+        float(value).
+        """
         cdef cfloat.ui64_double ud
         cdef cfloat.float64_t d
 

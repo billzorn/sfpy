@@ -69,6 +69,10 @@ cdef class Posit8:
     # convenience interface for use inside Python
 
     def __init__(self, value):
+        """Given an int, create a Posit8 from the bitpattern represented by
+        that int. Otherwise, given some value, create a Posit8 by rounding
+        float(value).
+        """
         if isinstance(value, int):
             self._c_posit.v = value
         else:
@@ -269,6 +273,10 @@ cdef class Quire8:
     # convenience interface for use inside Python
 
     def __init__(self, value):
+        """Given an int, create a Quire8 from the bitpattern represented by
+        that int. Otherwise, given some value, create a Quire8 by rounding
+        float(value) to a Posit8.
+        """
         if isinstance(value, int):
             self._c_quire.v = value
         else:
@@ -428,6 +436,10 @@ cdef class Posit16:
     # convenience interface for use inside Python
 
     def __init__(self, value):
+        """Given an int, create a Posit16 from the bitpattern represented by
+        that int. Otherwise, given some value, create a Posit16 by rounding
+        float(value).
+        """
         if isinstance(value, int):
             self._c_posit.v = value
         else:
@@ -638,6 +650,10 @@ cdef class Quire16:
     # convenience interface for use inside Python
 
     def __init__(self, value):
+        """Given an int, create a Quire16 from the bitpattern represented by
+        that int. Otherwise, given some value, create a Quire16 by rounding
+        float(value) to a Posit16.
+        """
         if isinstance(value, int):
             for idx in range(1, -1, -1):
                 self._c_quire.v[idx] = value & 0xffffffffffffffff
@@ -805,6 +821,10 @@ cdef class Posit32:
     # convenience interface for use inside Python
 
     def __init__(self, value):
+        """Given an int, create a Posit32 from the bitpattern represented by
+        that int. Otherwise, given some value, create a Posit32 by rounding
+        float(value).
+        """
         if isinstance(value, int):
             self._c_posit.v = value
         else:
@@ -1015,6 +1035,10 @@ cdef class Quire32:
     # convenience interface for use inside Python
 
     def __init__(self, value):
+        """Given an int, create a Quire32 from the bitpattern represented by
+        that int. Otherwise, given some value, create a Quire32 by rounding
+        float(value) to a Posit32.
+        """
         if isinstance(value, int):
             for idx in range(7, -1, -1):
                 self._c_quire.v[idx] = value & 0xffffffffffffffff

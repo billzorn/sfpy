@@ -261,11 +261,7 @@ cdef class Float16:
     def __mul__(self, Float16 other):
         return self.mul(other)
 
-    cpdef Float16 fma(self, Float16 a2, Float16 a3):
-        cdef cfloat.float16_t f = cfloat.f16_mulAdd(self._c_float, a2._c_float, a3._c_float)
-        return Float16.from_c_float(f)
-
-    cpdef Float16 fam(self, Float16 a1, Float16 a2):
+    cpdef Float16 fma(self, Float16 a1, Float16 a2):
         cdef cfloat.float16_t f = cfloat.f16_mulAdd(a1._c_float, a2._c_float, self._c_float)
         return Float16.from_c_float(f)
 
@@ -319,10 +315,7 @@ cdef class Float16:
         self.imul(other)
         return self
 
-    cpdef void ifma(self, Float16 a2, Float16 a3):
-        self._c_float = cfloat.f16_mulAdd(self._c_float, a2._c_float, a3._c_float)
-
-    cpdef void ifam(self, Float16 a1, Float16 a2):
+    cpdef void ifma(self, Float16 a1, Float16 a2):
         self._c_float = cfloat.f16_mulAdd(a1._c_float, a2._c_float, self._c_float)
 
     cpdef void idiv(self, Float16 other):
@@ -408,12 +401,8 @@ cpdef Float16 f16_mul(Float16 a1, Float16 a2):
     cdef cfloat.float16_t f = cfloat.f16_mul(a1._c_float, a2._c_float)
     return Float16.from_c_float(f)
 
-cpdef Float16 f16_fma(Float16 a1, Float16 a2, Float16 a3):
-    cdef cfloat.float16_t f = cfloat.f16_mulAdd(a1._c_float, a2._c_float, a3._c_float)
-    return Float16.from_c_float(f)
-
-cpdef Float16 f16_fam(Float16 a3, Float16 a1, Float16 a2):
-    cdef cfloat.float16_t f = cfloat.f16_mulAdd(a1._c_float, a2._c_float, a3._c_float)
+cpdef Float16 f16_fma(Float16 acc, Float16 a1, Float16 a2):
+    cdef cfloat.float16_t f = cfloat.f16_mulAdd(a1._c_float, a2._c_float, acc._c_float)
     return Float16.from_c_float(f)
 
 cpdef Float16 f16_div(Float16 a1, Float16 a2):
@@ -570,11 +559,7 @@ cdef class Float32:
     def __mul__(self, Float32 other):
         return self.mul(other)
 
-    cpdef Float32 fma(self, Float32 a2, Float32 a3):
-        cdef cfloat.float32_t f = cfloat.f32_mulAdd(self._c_float, a2._c_float, a3._c_float)
-        return Float32.from_c_float(f)
-
-    cpdef Float32 fam(self, Float32 a1, Float32 a2):
+    cpdef Float32 fma(self, Float32 a1, Float32 a2):
         cdef cfloat.float32_t f = cfloat.f32_mulAdd(a1._c_float, a2._c_float, self._c_float)
         return Float32.from_c_float(f)
 
@@ -628,10 +613,7 @@ cdef class Float32:
         self.imul(other)
         return self
 
-    cpdef void ifma(self, Float32 a2, Float32 a3):
-        self._c_float = cfloat.f32_mulAdd(self._c_float, a2._c_float, a3._c_float)
-
-    cpdef void ifam(self, Float32 a1, Float32 a2):
+    cpdef void ifma(self, Float32 a1, Float32 a2):
         self._c_float = cfloat.f32_mulAdd(a1._c_float, a2._c_float, self._c_float)
 
     cpdef void idiv(self, Float32 other):
@@ -717,12 +699,8 @@ cpdef Float32 f32_mul(Float32 a1, Float32 a2):
     cdef cfloat.float32_t f = cfloat.f32_mul(a1._c_float, a2._c_float)
     return Float32.from_c_float(f)
 
-cpdef Float32 f32_fma(Float32 a1, Float32 a2, Float32 a3):
-    cdef cfloat.float32_t f = cfloat.f32_mulAdd(a1._c_float, a2._c_float, a3._c_float)
-    return Float32.from_c_float(f)
-
-cpdef Float32 f32_fam(Float32 a3, Float32 a1, Float32 a2):
-    cdef cfloat.float32_t f = cfloat.f32_mulAdd(a1._c_float, a2._c_float, a3._c_float)
+cpdef Float32 f32_fma(Float32 acc, Float32 a1, Float32 a2):
+    cdef cfloat.float32_t f = cfloat.f32_mulAdd(a1._c_float, a2._c_float, acc._c_float)
     return Float32.from_c_float(f)
 
 cpdef Float32 f32_div(Float32 a1, Float32 a2):
@@ -877,11 +855,7 @@ cdef class Float64:
     def __mul__(self, Float64 other):
         return self.mul(other)
 
-    cpdef Float64 fma(self, Float64 a2, Float64 a3):
-        cdef cfloat.float64_t f = cfloat.f64_mulAdd(self._c_float, a2._c_float, a3._c_float)
-        return Float64.from_c_float(f)
-
-    cpdef Float64 fam(self, Float64 a1, Float64 a2):
+    cpdef Float64 fma(self, Float64 a1, Float64 a2):
         cdef cfloat.float64_t f = cfloat.f64_mulAdd(a1._c_float, a2._c_float, self._c_float)
         return Float64.from_c_float(f)
 
@@ -935,10 +909,7 @@ cdef class Float64:
         self.imul(other)
         return self
 
-    cpdef void ifma(self, Float64 a2, Float64 a3):
-        self._c_float = cfloat.f64_mulAdd(self._c_float, a2._c_float, a3._c_float)
-
-    cpdef void ifam(self, Float64 a1, Float64 a2):
+    cpdef void ifma(self, Float64 a1, Float64 a2):
         self._c_float = cfloat.f64_mulAdd(a1._c_float, a2._c_float, self._c_float)
 
     cpdef void idiv(self, Float64 other):
@@ -1024,12 +995,8 @@ cpdef Float64 f64_mul(Float64 a1, Float64 a2):
     cdef cfloat.float64_t f = cfloat.f64_mul(a1._c_float, a2._c_float)
     return Float64.from_c_float(f)
 
-cpdef Float64 f64_fma(Float64 a1, Float64 a2, Float64 a3):
-    cdef cfloat.float64_t f = cfloat.f64_mulAdd(a1._c_float, a2._c_float, a3._c_float)
-    return Float64.from_c_float(f)
-
-cpdef Float64 f64_fam(Float64 a3, Float64 a1, Float64 a2):
-    cdef cfloat.float64_t f = cfloat.f64_mulAdd(a1._c_float, a2._c_float, a3._c_float)
+cpdef Float64 f64_fma(Float64 acc, Float64 a1, Float64 a2):
+    cdef cfloat.float64_t f = cfloat.f64_mulAdd(a1._c_float, a2._c_float, acc._c_float)
     return Float64.from_c_float(f)
 
 cpdef Float64 f64_div(Float64 a1, Float64 a2):

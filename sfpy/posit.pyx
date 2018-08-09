@@ -135,11 +135,7 @@ cdef class Posit8:
     def __mul__(self, Posit8 other):
         return self.mul(other)
 
-    cpdef Posit8 fma(self, Posit8 a2, Posit8 a3):
-        cdef cposit.posit8_t f = cposit.p8_mulAdd(self._c_posit, a2._c_posit, a3._c_posit)
-        return Posit8.from_c_posit(f)
-
-    cpdef Posit8 fam(self, Posit8 a1, Posit8 a2):
+    cpdef Posit8 fma(self, Posit8 a1, Posit8 a2):
         cdef cposit.posit8_t f = cposit.p8_mulAdd(a1._c_posit, a2._c_posit, self._c_posit)
         return Posit8.from_c_posit(f)
 
@@ -186,10 +182,7 @@ cdef class Posit8:
         self.imul(other)
         return self
 
-    cpdef void ifma(self, Posit8 a2, Posit8 a3):
-        self._c_posit = cposit.p8_mulAdd(self._c_posit, a2._c_posit, a3._c_posit)
-
-    cpdef void ifam(self, Posit8 a1, Posit8 a2):
+    cpdef void ifma(self, Posit8 a1, Posit8 a2):
         self._c_posit = cposit.p8_mulAdd(a1._c_posit, a2._c_posit, self._c_posit)
 
     cpdef void idiv(self, Posit8 other):
@@ -301,18 +294,18 @@ cdef class Quire8:
 
     # arithmetic
 
-    cpdef Quire8 qam(self, Posit8 a1, Posit8 a2):
+    cpdef Quire8 qma(self, Posit8 a1, Posit8 a2):
         cdef cposit.quire8_t f = cposit.q8_fdp_add(self._c_quire, a1._c_posit, a2._c_posit)
         return Quire8.from_c_quire(f)
 
-    cpdef Quire8 qsm(self, Posit8 a1, Posit8 a2):
+    cpdef Quire8 qms(self, Posit8 a1, Posit8 a2):
         cdef cposit.quire8_t f = cposit.q8_fdp_sub(self._c_quire, a1._c_posit, a2._c_posit)
         return Quire8.from_c_quire(f)
 
-    cpdef void iqam(self, Posit8 a1, Posit8 a2):
+    cpdef void iqma(self, Posit8 a1, Posit8 a2):
         self._c_quire = cposit.q8_fdp_add(self._c_quire, a1._c_posit, a2._c_posit)
 
-    cpdef void iqsm(self, Posit8 a1, Posit8 a2):
+    cpdef void iqms(self, Posit8 a1, Posit8 a2):
         self._c_quire = cposit.q8_fdp_sub(self._c_quire, a1._c_posit, a2._c_posit)
 
     cpdef void iclr(self):
@@ -351,12 +344,8 @@ cpdef Posit8 p8_mul(Posit8 a1, Posit8 a2):
     cdef cposit.posit8_t f = cposit.p8_mul(a1._c_posit, a2._c_posit)
     return Posit8.from_c_posit(f)
 
-cpdef Posit8 p8_fma(Posit8 a1, Posit8 a2, Posit8 a3):
-    cdef cposit.posit8_t f = cposit.p8_mulAdd(a1._c_posit, a2._c_posit, a3._c_posit)
-    return Posit8.from_c_posit(f)
-
-cpdef Posit8 p8_fam(Posit8 a3, Posit8 a1, Posit8 a2):
-    cdef cposit.posit8_t f = cposit.p8_mulAdd(a1._c_posit, a2._c_posit, a3._c_posit)
+cpdef Posit8 p8_fma(Posit8 acc, Posit8 a1, Posit8 a2):
+    cdef cposit.posit8_t f = cposit.p8_mulAdd(a1._c_posit, a2._c_posit, acc._c_posit)
     return Posit8.from_c_posit(f)
 
 cpdef Posit8 p8_div(Posit8 a1, Posit8 a2):
@@ -390,12 +379,12 @@ cpdef Quire8 p8_to_q8(Posit8 a1):
     f = cposit.q8_fdp_add(f, a1._c_posit, _p8_one)
     return Quire8.from_c_quire(f)
 
-cpdef Quire8 q8_qam(Quire8 a3, Posit8 a1, Posit8 a2):
-    cdef cposit.quire8_t f = cposit.q8_fdp_add(a3._c_quire, a1._c_posit, a2._c_posit)
+cpdef Quire8 q8_qma(Quire8 acc, Posit8 a1, Posit8 a2):
+    cdef cposit.quire8_t f = cposit.q8_fdp_add(acc._c_quire, a1._c_posit, a2._c_posit)
     return Quire8.from_c_quire(f)
 
-cpdef Quire8 q8_qsm(Quire8 a3, Posit8 a1, Posit8 a2):
-    cdef cposit.quire8_t f = cposit.q8_fdp_sub(a3._c_quire, a1._c_posit, a2._c_posit)
+cpdef Quire8 q8_qms(Quire8 acc, Posit8 a1, Posit8 a2):
+    cdef cposit.quire8_t f = cposit.q8_fdp_sub(acc._c_quire, a1._c_posit, a2._c_posit)
     return Quire8.from_c_quire(f)
 
 cpdef Posit8 q8_to_p8(Quire8 a1):
@@ -505,11 +494,7 @@ cdef class Posit16:
     def __mul__(self, Posit16 other):
         return self.mul(other)
 
-    cpdef Posit16 fma(self, Posit16 a2, Posit16 a3):
-        cdef cposit.posit16_t f = cposit.p16_mulAdd(self._c_posit, a2._c_posit, a3._c_posit)
-        return Posit16.from_c_posit(f)
-
-    cpdef Posit16 fam(self, Posit16 a1, Posit16 a2):
+    cpdef Posit16 fma(self, Posit16 a1, Posit16 a2):
         cdef cposit.posit16_t f = cposit.p16_mulAdd(a1._c_posit, a2._c_posit, self._c_posit)
         return Posit16.from_c_posit(f)
 
@@ -556,10 +541,7 @@ cdef class Posit16:
         self.imul(other)
         return self
 
-    cpdef void ifma(self, Posit16 a2, Posit16 a3):
-        self._c_posit = cposit.p16_mulAdd(self._c_posit, a2._c_posit, a3._c_posit)
-
-    cpdef void ifam(self, Posit16 a1, Posit16 a2):
+    cpdef void ifma(self, Posit16 a1, Posit16 a2):
         self._c_posit = cposit.p16_mulAdd(a1._c_posit, a2._c_posit, self._c_posit)
 
     cpdef void idiv(self, Posit16 other):
@@ -689,18 +671,18 @@ cdef class Quire16:
 
     # arithmetic
 
-    cpdef Quire16 qam(self, Posit16 a1, Posit16 a2):
+    cpdef Quire16 qma(self, Posit16 a1, Posit16 a2):
         cdef cposit.quire16_t f = cposit.q16_fdp_add(self._c_quire, a1._c_posit, a2._c_posit)
         return Quire16.from_c_quire(f)
 
-    cpdef Quire16 qsm(self, Posit16 a1, Posit16 a2):
+    cpdef Quire16 qms(self, Posit16 a1, Posit16 a2):
         cdef cposit.quire16_t f = cposit.q16_fdp_sub(self._c_quire, a1._c_posit, a2._c_posit)
         return Quire16.from_c_quire(f)
 
-    cpdef void iqam(self, Posit16 a1, Posit16 a2):
+    cpdef void iqma(self, Posit16 a1, Posit16 a2):
         self._c_quire = cposit.q16_fdp_add(self._c_quire, a1._c_posit, a2._c_posit)
 
-    cpdef void iqsm(self, Posit16 a1, Posit16 a2):
+    cpdef void iqms(self, Posit16 a1, Posit16 a2):
         self._c_quire = cposit.q16_fdp_sub(self._c_quire, a1._c_posit, a2._c_posit)
 
     cpdef void iclr(self):
@@ -739,12 +721,8 @@ cpdef Posit16 p16_mul(Posit16 a1, Posit16 a2):
     cdef cposit.posit16_t f = cposit.p16_mul(a1._c_posit, a2._c_posit)
     return Posit16.from_c_posit(f)
 
-cpdef Posit16 p16_fma(Posit16 a1, Posit16 a2, Posit16 a3):
-    cdef cposit.posit16_t f = cposit.p16_mulAdd(a1._c_posit, a2._c_posit, a3._c_posit)
-    return Posit16.from_c_posit(f)
-
-cpdef Posit16 p16_fam(Posit16 a3, Posit16 a1, Posit16 a2):
-    cdef cposit.posit16_t f = cposit.p16_mulAdd(a1._c_posit, a2._c_posit, a3._c_posit)
+cpdef Posit16 p16_fma(Posit16 acc, Posit16 a1, Posit16 a2):
+    cdef cposit.posit16_t f = cposit.p16_mulAdd(a1._c_posit, a2._c_posit, acc._c_posit)
     return Posit16.from_c_posit(f)
 
 cpdef Posit16 p16_div(Posit16 a1, Posit16 a2):
@@ -778,12 +756,12 @@ cpdef Quire16 p16_to_q16(Posit16 a1):
     f = cposit.q16_fdp_add(f, a1._c_posit, _p16_one)
     return Quire16.from_c_quire(f)
 
-cpdef Quire16 q16_qam(Quire16 a3, Posit16 a1, Posit16 a2):
-    cdef cposit.quire16_t f = cposit.q16_fdp_add(a3._c_quire, a1._c_posit, a2._c_posit)
+cpdef Quire16 q16_qma(Quire16 acc, Posit16 a1, Posit16 a2):
+    cdef cposit.quire16_t f = cposit.q16_fdp_add(acc._c_quire, a1._c_posit, a2._c_posit)
     return Quire16.from_c_quire(f)
 
-cpdef Quire16 q16_qsm(Quire16 a3, Posit16 a1, Posit16 a2):
-    cdef cposit.quire16_t f = cposit.q16_fdp_sub(a3._c_quire, a1._c_posit, a2._c_posit)
+cpdef Quire16 q16_qms(Quire16 acc, Posit16 a1, Posit16 a2):
+    cdef cposit.quire16_t f = cposit.q16_fdp_sub(acc._c_quire, a1._c_posit, a2._c_posit)
     return Quire16.from_c_quire(f)
 
 cpdef Posit16 q16_to_p16(Quire16 a1):
@@ -893,11 +871,7 @@ cdef class Posit32:
     def __mul__(self, Posit32 other):
         return self.mul(other)
 
-    cpdef Posit32 fma(self, Posit32 a2, Posit32 a3):
-        cdef cposit.posit32_t f = cposit.p32_mulAdd(self._c_posit, a2._c_posit, a3._c_posit)
-        return Posit32.from_c_posit(f)
-
-    cpdef Posit32 fam(self, Posit32 a1, Posit32 a2):
+    cpdef Posit32 fma(self, Posit32 a1, Posit32 a2):
         cdef cposit.posit32_t f = cposit.p32_mulAdd(a1._c_posit, a2._c_posit, self._c_posit)
         return Posit32.from_c_posit(f)
 
@@ -944,10 +918,7 @@ cdef class Posit32:
         self.imul(other)
         return self
 
-    cpdef void ifma(self, Posit32 a2, Posit32 a3):
-        self._c_posit = cposit.p32_mulAdd(self._c_posit, a2._c_posit, a3._c_posit)
-
-    cpdef void ifam(self, Posit32 a1, Posit32 a2):
+    cpdef void ifma(self, Posit32 a1, Posit32 a2):
         self._c_posit = cposit.p32_mulAdd(a1._c_posit, a2._c_posit, self._c_posit)
 
     cpdef void idiv(self, Posit32 other):
@@ -1077,18 +1048,18 @@ cdef class Quire32:
 
     # arithmetic
 
-    cpdef Quire32 qam(self, Posit32 a1, Posit32 a2):
+    cpdef Quire32 qma(self, Posit32 a1, Posit32 a2):
         cdef cposit.quire32_t f = cposit.q32_fdp_add(self._c_quire, a1._c_posit, a2._c_posit)
         return Quire32.from_c_quire(f)
 
-    cpdef Quire32 qsm(self, Posit32 a1, Posit32 a2):
+    cpdef Quire32 qms(self, Posit32 a1, Posit32 a2):
         cdef cposit.quire32_t f = cposit.q32_fdp_sub(self._c_quire, a1._c_posit, a2._c_posit)
         return Quire32.from_c_quire(f)
 
-    cpdef void iqam(self, Posit32 a1, Posit32 a2):
+    cpdef void iqma(self, Posit32 a1, Posit32 a2):
         self._c_quire = cposit.q32_fdp_add(self._c_quire, a1._c_posit, a2._c_posit)
 
-    cpdef void iqsm(self, Posit32 a1, Posit32 a2):
+    cpdef void iqms(self, Posit32 a1, Posit32 a2):
         self._c_quire = cposit.q32_fdp_sub(self._c_quire, a1._c_posit, a2._c_posit)
 
     cpdef void iclr(self):
@@ -1127,12 +1098,8 @@ cpdef Posit32 p32_mul(Posit32 a1, Posit32 a2):
     cdef cposit.posit32_t f = cposit.p32_mul(a1._c_posit, a2._c_posit)
     return Posit32.from_c_posit(f)
 
-cpdef Posit32 p32_fma(Posit32 a1, Posit32 a2, Posit32 a3):
-    cdef cposit.posit32_t f = cposit.p32_mulAdd(a1._c_posit, a2._c_posit, a3._c_posit)
-    return Posit32.from_c_posit(f)
-
-cpdef Posit32 p32_fam(Posit32 a3, Posit32 a1, Posit32 a2):
-    cdef cposit.posit32_t f = cposit.p32_mulAdd(a1._c_posit, a2._c_posit, a3._c_posit)
+cpdef Posit32 p32_fma(Posit32 acc, Posit32 a1, Posit32 a2):
+    cdef cposit.posit32_t f = cposit.p32_mulAdd(a1._c_posit, a2._c_posit, acc._c_posit)
     return Posit32.from_c_posit(f)
 
 cpdef Posit32 p32_div(Posit32 a1, Posit32 a2):
@@ -1166,12 +1133,12 @@ cpdef Quire32 p32_to_q32(Posit32 a1):
     f = cposit.q32_fdp_add(f, a1._c_posit, _p32_one)
     return Quire32.from_c_quire(f)
 
-cpdef Quire32 q32_qam(Quire32 a3, Posit32 a1, Posit32 a2):
-    cdef cposit.quire32_t f = cposit.q32_fdp_add(a3._c_quire, a1._c_posit, a2._c_posit)
+cpdef Quire32 q32_qma(Quire32 acc, Posit32 a1, Posit32 a2):
+    cdef cposit.quire32_t f = cposit.q32_fdp_add(acc._c_quire, a1._c_posit, a2._c_posit)
     return Quire32.from_c_quire(f)
 
-cpdef Quire32 q32_qsm(Quire32 a3, Posit32 a1, Posit32 a2):
-    cdef cposit.quire32_t f = cposit.q32_fdp_sub(a3._c_quire, a1._c_posit, a2._c_posit)
+cpdef Quire32 q32_qms(Quire32 acc, Posit32 a1, Posit32 a2):
+    cdef cposit.quire32_t f = cposit.q32_fdp_sub(acc._c_quire, a1._c_posit, a2._c_posit)
     return Quire32.from_c_quire(f)
 
 cpdef Posit32 q32_to_p32(Quire32 a1):

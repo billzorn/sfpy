@@ -118,9 +118,9 @@ The Makefiles used to build the static libraries need a few small tweaks to
 make sure that all the right flags are given to gcc. The changes are shown
 in the following diffs.
 
-SoftPosit/build/Linux-x86_64/Makefile
+`SoftPosit/build/Linux-x86_64/Makefile`
 
-```
+```diff
 diff --git a/build/Linux-x86_64-GCC/Makefile b/build/Linux-x86_64-GCC/Makefile
 index 4409e43..46bb877 100644
 --- a/build/Linux-x86_64-GCC/Makefile
@@ -139,9 +139,9 @@ index 4409e43..46bb877 100644
  MAKELIB = ar crs $@
 ```
 
-berkeley-softfloat-3/build/Linux-x86_64/Makefile
+`berkeley-softfloat-3/build/Linux-x86_64/Makefile`
 
-```
+```diff
 diff --git a/build/Linux-x86_64-GCC/Makefile b/build/Linux-x86_64-GCC/Makefile
 index 2ee5dad..b175964 100644
 --- a/build/Linux-x86_64-GCC/Makefile

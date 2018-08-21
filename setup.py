@@ -18,15 +18,24 @@ float_ext = setuptools.Extension(
 
 setuptools.setup(
     name='sfpy',
-    version='0.2.0',
+    version='0.3.0',
     author='Bill Zorn',
     author_email='bill.zorn@gmail.com',
+    url='https://github.com/billzorn/sfpy',
     description='softfloat and softposit in python',
     long_description=long_description,
-    url='https://github.com/billzorn/sfpy',
+    long_description_content_type="text/markdown",
     packages=['sfpy'],
     ext_modules=[posit_ext, float_ext],
     classifiers=[
         'Development Status :: 4 - Beta',
+        'Operating System :: POSIX :: Linux',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'License :: OSI Approved :: MIT License',
     ]
 )

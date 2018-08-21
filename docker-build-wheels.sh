@@ -1,7 +1,8 @@
 #!/bin/bash
 set -e -x
 cd /io/
-ls
+
+rm wheelhouse/*.whl
 
 (cd SoftPosit/build/Linux-x86_64-GCC; make clean; make)
 (cd berkeley-softfloat-3/build/Linux-x86_64-GCC; make clean; make)
@@ -9,8 +10,6 @@ ls
 for PYBIN in /opt/python/*/bin; do
     "${PYBIN}/pip" wheel . -w wheelhouse/
 done
-
-rm wheelhouse/*.whl
 
 for whl in wheelhouse/*.whl; do
     auditwheel repair "$whl" -w wheelhouse/

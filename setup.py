@@ -1,5 +1,8 @@
 import setuptools
 
+with open('README.md', 'rt') as f:
+    long_description = f.read()
+
 posit_ext = setuptools.Extension(
     'sfpy.posit', ['sfpy/posit.c'],
     include_dirs=['SoftPosit/source/include/'],
@@ -15,11 +18,15 @@ float_ext = setuptools.Extension(
 
 setuptools.setup(
     name='sfpy',
-    version='0.1.0',
-    description='softfloat and softposit in python',
+    version='0.2.0',
     author='Bill Zorn',
     author_email='bill.zorn@gmail.com',
+    description='softfloat and softposit in python',
+    long_description=long_description,
     url='https://github.com/billzorn/sfpy',
     packages=['sfpy'],
     ext_modules=[posit_ext, float_ext],
+    classifiers=[
+        'Development Status :: 4 - Beta',
+    ]
 )

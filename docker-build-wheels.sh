@@ -10,6 +10,8 @@ for PYBIN in /opt/python/*/bin; do
     "${PYBIN}/pip" wheel . -w wheelhouse/
 done
 
+rm wheelhouse/*.whl
+
 for whl in wheelhouse/*.whl; do
     auditwheel repair "$whl" -w wheelhouse/
 done

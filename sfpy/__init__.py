@@ -1,8 +1,3 @@
-import os
-mypath = os.path.abspath(os.path.dirname(__file__))
-
-print('hi from module sfpy @ {:s}'.format(mypath))
-
 from . import posit as softposit
 from . import float as softfloat
 from .posit import Posit8, Quire8, Posit16, Quire16, Posit32, Quire32

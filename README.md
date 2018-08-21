@@ -9,4 +9,4 @@ softfloat and softposit in Python
 ```
 
 ## Building
-See [BUILDING](BUILDING.md).
+See [BUILDING](https://github.com/billzorn/sfpy/blob/master/BUILDING.md).

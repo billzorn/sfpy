@@ -18,7 +18,7 @@ float_ext = setuptools.Extension(
 
 setuptools.setup(
     name='sfpy',
-    version='0.3.0',
+    version='0.4.0',
     author='Bill Zorn',
     author_email='bill.zorn@gmail.com',
     url='https://github.com/billzorn/sfpy',

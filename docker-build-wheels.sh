@@ -2,7 +2,7 @@
 set -e -x
 cd /io/
 
-rm wheelhouse/*.whl
+rm -f wheelhouse/*.whl
 
 (cd SoftPosit/build/Linux-x86_64-GCC; make clean; make)
 (cd berkeley-softfloat-3/build/Linux-x86_64-GCC; make clean; make)

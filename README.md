@@ -64,7 +64,7 @@ environment) can be built with the following:
 (.env) $
 ```
 
-The local wheel will be created in the dist/ directory. This is the recommended
+The local wheel will be created in the `dist/` directory. This is the recommended
 way to install the package when building it from source locally:
 
 ```
@@ -90,7 +90,7 @@ $ sudo docker run -u $(id -u) --rm -v `pwd`:/io quay.io/pypa/manylinux1_x86_64 /
 $
 ```
 
-This will create a set of manylinux1 wheel files in the wheelhouse/ directory.
+This will create a set of manylinux1 wheel files in the `wheelhouse/` directory.
 
 The docker build will make its own static libraries as part of the build process,
 and delete any existing static libraries with `make clean`.

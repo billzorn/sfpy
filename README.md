@@ -1,7 +1,7 @@
 # sfpy
 softfloat and softposit in Python
   * support for softfloat float16, float32, and float64
-  * support for softposit posit8, quire8, posit16, and quire16
+  * support for softposit posit8, quire8, posit16, quire16, posit32, and quire32
 
 ## Installation
 On most linux distros with CPython 2.7, 3.4, 3.5, 3.6, or 3.7, sfpy should work out of the box:

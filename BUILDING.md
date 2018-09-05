@@ -112,18 +112,18 @@ in the following diffs.
 
 ```diff
 diff --git a/build/Linux-x86_64-GCC/Makefile b/build/Linux-x86_64-GCC/Makefile
-index 42c5e6b..17fd807 100644
+index 58db2f3..c8330aa 100644
 --- a/build/Linux-x86_64-GCC/Makefile
 +++ b/build/Linux-x86_64-GCC/Makefile
 @@ -60,9 +60,9 @@ LINK_PYTHON = \
 
  DELETE = rm -f
  C_INCLUDES = -I. -I$(SOURCE_DIR)/$(SPECIALIZE_TYPE) -I$(SOURCE_DIR)/include
--OPTIMISATION  = -O2 #-march=core-avx2
-+OPTIMISATION  = -fPIC -O2 #-march=core-avx2
+-OPTIMISATION  = -O2 -march=core-avx2
++OPTIMISATION  = -O2 -fPIC^M
  COMPILE_C = \
 -  gcc -c -Werror-implicit-function-declaration -DSOFTPOSIT_FAST_INT64 \
-+  gcc -std=c99 -c -Werror-implicit-function-declaration -DSOFTPOSIT_FAST_INT64 \
++  gcc -std=c99 -c -Werror-implicit-function-declaration -DSOFTPOSIT_FAST_INT64 \^M
      $(SOFTPOSIT_OPTS) $(C_INCLUDES) $(OPTIMISATION) \
      -o $@
  MAKELIB = ar crs $@

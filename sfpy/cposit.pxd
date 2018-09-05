@@ -113,7 +113,8 @@ cdef extern from '../SoftPosit/source/include/softposit.h':
 
     bint isNaRQ8( quire8_t );
     bint isQ8Zero( quire8_t );
-    quire8_t q8_clr( quire8_t );
+    #quire8_t q8_clr( quire8_t );
+    quire8_t q8Clr();
     quire8_t castQ8( uint32_t );
     posit8_t castP8( uint8_t );
     uint8_t castUI8( posit8_t );
@@ -161,7 +162,8 @@ cdef extern from '../SoftPosit/source/include/softposit.h':
     # void printBinary( uint64_t*, int );
     # void printHex( uint64_t );
 
-    quire16_t q16_clr( quire16_t );
+    #quire16_t q16_clr( quire16_t );
+    quire16_t q16Clr();
     quire16_t castQ16( uint16_t, uint16_t );
     posit16_t castP16( uint16_t );
     uint16_t castUI16( posit16_t );
@@ -204,7 +206,7 @@ cdef extern from '../SoftPosit/source/include/softposit.h':
     bint isNaRQ32( quire32_t );
     bint isQ32Zero( quire32_t );
     quire32_t q32_TwosComplement( quire32_t );
-    quire32_t q32_clr( quire32_t );
+    #quire32_t q32_clr( quire32_t );
     quire32_t q32Clr();
     quire32_t castQ32( uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, uint64_t, uint64_t );
     posit32_t castP32( uint32_t );

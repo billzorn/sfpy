@@ -7,7 +7,6 @@ posit_ext = setuptools.Extension(
     'sfpy.posit', ['sfpy/posit.c'],
     include_dirs=['SoftPosit/source/include/'],
     extra_objects=['SoftPosit/build/Linux-x86_64-GCC/softposit.a'],
-    libraries=['m'],
 )
 
 float_ext = setuptools.Extension(

@@ -112,20 +112,26 @@ in the following diffs.
 
 ```diff
 diff --git a/build/Linux-x86_64-GCC/Makefile b/build/Linux-x86_64-GCC/Makefile
-index 58db2f3..c8330aa 100644
+index 7affd4b..a7c792b 100644
 --- a/build/Linux-x86_64-GCC/Makefile
 +++ b/build/Linux-x86_64-GCC/Makefile
-@@ -60,9 +60,9 @@ LINK_PYTHON = \
-
- DELETE = rm -f
+@@ -42,7 +42,7 @@
+ SOURCE_DIR ?= ../../source
+ PYTHON_DIR ?= ../../python
+ SPECIALIZE_TYPE ?= 8086-SSE
+-COMPILER ?= gcc
++COMPILER ?= gcc -std=c11^M
+ 
+ SOFTPOSIT_OPTS ?= \
+   -DINLINE_LEVEL=5 #\
+@@ -69,7 +69,7 @@ endif
  C_INCLUDES = -I. -I$(SOURCE_DIR)/$(SPECIALIZE_TYPE) -I$(SOURCE_DIR)/include
--OPTIMISATION  = -O2 -march=core-avx2
-+OPTIMISATION  = -O2 -fPIC^M
+ OPTIMISATION  = -O2 #-march=core-avx2
  COMPILE_C = \
--  gcc -c -Werror-implicit-function-declaration -DSOFTPOSIT_FAST_INT64 \
-+  gcc -std=c99 -c -Werror-implicit-function-declaration -DSOFTPOSIT_FAST_INT64 \^M
+-  $(COMPILER) -c -Werror-implicit-function-declaration -DSOFTPOSIT_FAST_INT64 \
++  $(COMPILER) -fPIC -c -Werror-implicit-function-declaration -DSOFTPOSIT_FAST_INT64 \^M
      $(SOFTPOSIT_OPTS) $(C_INCLUDES) $(OPTIMISATION) \
-     -o $@
+     -o $@ 
  MAKELIB = ar crs $@
 ```
 

@@ -676,6 +676,129 @@ cdef class Float32:
         cdef cfloat.float64_t f = cfloat.f32_to_f64(self._c_float)
         return Float64.from_c_float(f)
 
+########
+# integer conversions
+########
+
+# u/i32 <-> f16
+
+cpdef Float16 i32_to_f16(int32_t value):
+    cdef cfloat.float16_t f = cfloat.i32_to_f16(value)
+    return Float16.from_c_float(f)
+
+cpdef Float16 ui32_to_f16(uint32_t value):
+    cdef cfloat.float16_t f = cfloat.ui32_to_f16(value)
+    return Float16.from_c_float(f)
+
+cpdef uint32_t f16_to_ui32(Float16 a1):
+    cdef uint32_t i = cfloat.f16_to_ui32(a1._c_float,
+                                       cfloat.softfloat_roundingMode, True)
+    return i
+
+cpdef int32_t f16_to_i32(Float16 a1):
+    cdef int32_t i = cfloat.f16_to_i32(a1._c_float,
+                                       cfloat.softfloat_roundingMode, True)
+    return i
+
+# u/i32 <-> f32
+
+cpdef Float32 i32_to_f32(int32_t value):
+    cdef cfloat.float32_t f = cfloat.i32_to_f32(value)
+    return Float32.from_c_float(f)
+
+cpdef Float32 ui32_to_f32(uint32_t value):
+    cdef cfloat.float32_t f = cfloat.ui32_to_f32(value)
+    return Float32.from_c_float(f)
+
+cpdef uint32_t f32_to_ui32(Float32 a1):
+    cdef uint32_t i = cfloat.f32_to_ui32(a1._c_float,
+                                       cfloat.softfloat_roundingMode, True)
+    return i
+
+cpdef int32_t f32_to_i32(Float32 a1):
+    cdef int32_t i = cfloat.f32_to_i32(a1._c_float,
+                                       cfloat.softfloat_roundingMode, True)
+    return i
+
+# u/i32 <-> f64
+
+cpdef Float64 i32_to_f64(int32_t value):
+    cdef cfloat.float64_t f = cfloat.i32_to_f64(value)
+    return Float64.from_c_float(f)
+
+cpdef Float64 ui32_to_f64(uint32_t value):
+    cdef cfloat.float64_t f = cfloat.ui32_to_f64(value)
+    return Float64.from_c_float(f)
+
+cpdef uint32_t f64_to_ui32(Float64 a1):
+    cdef uint32_t i = cfloat.f64_to_ui32(a1._c_float,
+                                       cfloat.softfloat_roundingMode, True)
+    return i
+
+cpdef int32_t f64_to_i32(Float64 a1):
+    cdef int32_t i = cfloat.f64_to_i32(a1._c_float,
+                                       cfloat.softfloat_roundingMode, True)
+    return i
+
+# u/i64 <-> f16
+
+cpdef Float16 i64_to_f16(int32_t value):
+    cdef cfloat.float16_t f = cfloat.i64_to_f16(value)
+    return Float16.from_c_float(f)
+
+cpdef Float16 ui64_to_f16(uint32_t value):
+    cdef cfloat.float16_t f = cfloat.ui64_to_f16(value)
+    return Float16.from_c_float(f)
+
+cpdef uint32_t f16_to_ui64(Float16 a1):
+    cdef uint32_t i = cfloat.f16_to_ui64(a1._c_float,
+                                       cfloat.softfloat_roundingMode, True)
+    return i
+
+cpdef int32_t f16_to_i64(Float16 a1):
+    cdef int32_t i = cfloat.f16_to_i64(a1._c_float,
+                                       cfloat.softfloat_roundingMode, True)
+    return i
+
+# u/i64 <-> f32
+
+cpdef Float32 i64_to_f32(int32_t value):
+    cdef cfloat.float32_t f = cfloat.i64_to_f32(value)
+    return Float32.from_c_float(f)
+
+cpdef Float32 ui64_to_f32(uint32_t value):
+    cdef cfloat.float32_t f = cfloat.ui64_to_f32(value)
+    return Float32.from_c_float(f)
+
+cpdef uint32_t f32_to_ui64(Float32 a1):
+    cdef uint32_t i = cfloat.f32_to_ui64(a1._c_float,
+                                       cfloat.softfloat_roundingMode, True)
+    return i
+
+cpdef int32_t f32_to_i64(Float32 a1):
+    cdef int32_t i = cfloat.f32_to_i64(a1._c_float,
+                                       cfloat.softfloat_roundingMode, True)
+    return i
+
+# u/i64 <-> f64
+
+cpdef Float64 i64_to_f64(int64_t value):
+    cdef cfloat.float64_t f = cfloat.i64_to_f64(value)
+    return Float64.from_c_float(f)
+
+cpdef Float64 ui64_to_f64(uint64_t value):
+    cdef cfloat.float64_t f = cfloat.ui64_to_f64(value)
+    return Float64.from_c_float(f)
+
+cpdef uint64_t f64_to_ui64(Float64 a1):
+    cdef uint64_t i = cfloat.f64_to_ui64(a1._c_float,
+                                       cfloat.softfloat_roundingMode, True)
+    return i
+
+cpdef int64_t f64_to_i64(Float64 a1):
+    cdef int64_t i = cfloat.f64_to_i64(a1._c_float,
+                                       cfloat.softfloat_roundingMode, True)
+    return i
 
 # external, non-method arithmetic
 

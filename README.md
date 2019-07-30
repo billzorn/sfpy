@@ -4,15 +4,19 @@ softfloat and softposit in Python
   * support for softposit posit8, quire8, posit16, quire16, posit32, and quire32
 
 ## Installation
-On most linux distros with CPython 2.7, 3.4, 3.5, 3.6, or 3.7, sfpy should work out of the box:
+
+On most linux distros, sfpy should work out of the box:
 
 ```
 pip install sfpy
 ```
 
+Binary wheels (compatible with manylinux1) are available for CPython 2.7, 3.5, 3.6, and 3.7.
+
 Under the hood, sfpy uses Cython to create bindings for the softposit and softfloat C libraries.
-The building instructions are tested on Ubuntu 16.04 - for other platforms they may need some
-adaptation.
+These building instructions are tested on Ubuntu 18.04 - for other platforms they may need some
+adaptation. The cythonized C and compiled static libraries (.a), as well as necessary headers,
+are included in the source releases; installing these does not require Cython.
 
 ## Demo
 ```

@@ -11,36 +11,34 @@ $ source .env/bin/activate
 (.env) $
 ```
 
+### Building the C libraries
+The Makefile includes targets for all steps of the build process.
+
+First, compile the C libraries (remember to check out the submodules,
+and make the necessary changes to their build files).
+
+```
+$ make lib
+[...]
+$
+```
+
+This will build the submodules, and copy all of the files necessary for
+the source distribution to the appropriate locations to build sfpy.
+
 ### Cython extensions
-Compile the Cython extensions to C:
+Next, compile the Cython to distributable C:
 
 ```
-(.env) $ cython sfpy/*.pyx
+(.env) $ make cython
 (.env) $
 ```
-
-### Static libraries
-The extension module depends on the softposit and softfloat static libraries.
-They can be built with the following:
-
-```
-(.env) $ (cd SoftPosit/build/Linux-x86_64-GCC/; make clean; make)
-[...]
-(.env) $ (cd berkeley-softfloat-3/build/Linux-x86_64-GCC/; make clean; make)
-[...]
-(.env) $
-```
-
-Note that some changes are needed to the Makefiles so that the libraries are
-compiled with the correct options. Both libraries need to use -fPIC, and
-SoftPosit may need -std=c99 to work on older versions of GCC. See the
-diff below.
 
 ### Building locally
 The extension modules can be built in place in the usual way:
 
 ```
-(.env) $ python setup.py build_ext --inplace
+(.env) $ make inplace
 [...]
 (.env) $
 ```
@@ -49,7 +47,7 @@ A local wheel (compatible with the python version installed in the virtual
 environment) can be built with the following:
 
 ```
-(.env) $ python setup.py bdist_wheel
+(.env) $ make wheel
 [...]
 (.env) $
 ```
@@ -67,28 +65,67 @@ Posit8(1.3125)
 >>>
 ```
 
-### Building manylinux1 wheels for distribution
-Widely compatible linux wheels can be built with the help of PyPA's manylinux
-docker image. This requires that Docker is installed, and that the host can pull
-the proper docker image.
-
-To build the manylinux wheels, run:
+The package can also be distributed in source form, including the cythonized
+C and the compiled static libraries:
 
 ```
-$ sudo docker run -u $(id -u) --rm -v `pwd`:/io quay.io/pypa/manylinux1_x86_64 /io/docker-build-wheels.sh
+(.env) $ make sdist
+[...]
+(.env) $
+```
+
+Installing this package requires a linux environment compatible with the
+static libraries and a C compiler, but not Cython.
+
+Finally, the makefile includes several commands for cleaning up after building
+and distribution; `make libclean` cleans the builds of the C libraries,
+`make clean` cleans up the files Python creates during distribution,
+and `make distclean` deletes the files that are copied over from the build
+C libraries for inclusion in a source package release.
+
+`make allclean` runs all of these cleaning procedures at the same time.
+
+### Building manylinux wheels for distribution
+Widely compatible linux wheels can be built with the help of PyPA's manylinux
+docker image. This requires that Docker is installed, and that the host can pull
+the proper docker image. The process should also work on customized manylinux
+images, such as my modifications to allow use of GCC 8.3 and mingw-w64 6.0.0.
+
+To make sure the build process works, try the following:
+
+```
+$ docker run -u $(id -u) --rm -v `pwd`:/io quay.io/pypa/manylinux1_x86_64 /io/docker-build-libs.sh
 [...]
 $
 ```
 
-This will create a set of manylinux1 wheel files in the `wheelhouse/` directory.
+To build the manylinux wheels, run:
+
+```
+$ docker run -u $(id -u) --rm -v `pwd`:/io -ti billzorn/manylinux-gcc8:1.3 /io/docker-build-wheels.sh manylinux1_x86_64
+[...]
+$
+```
+
+This will create a set of wheel (.whl) files in the `wheelhouse/` directory.
+
+The tagged image `-ti billzorn/manylinux-gcc8:1.3` can be replaced with another suitable manylinux image.
+
+The argument at the end, `manylinux1_x86_64`, indicates that the resulting wheel should be labeled for 64-bit manylinux1;
+this could be changed to create wheels for future manylinux2010 standards.
 
 The docker build will make its own static libraries as part of the build process,
-and delete any existing static libraries with `make clean`.
+and delete any existing static libraries with `make clean`. The files necessary for a source release
+will be left in the appropriate places.
 
+To also produce a source release, run `make sdist` after building the manylinux wheels.
+Remember to use the Python virtual environment.
+
+### Releasing to PyPI
 The wheels can be uploaded to PyPI (if you're the package maintainer) with
 
 ```
-(.env) $ twine upload --repository-url https://test.pypi.org/legacy/ wheelhouse/*
+(.env) $ twine upload --repository-url https://test.pypi.org/legacy/ wheelhouse/* dist/*
 [...]
 (.env) $
 ```
@@ -96,12 +133,12 @@ The wheels can be uploaded to PyPI (if you're the package maintainer) with
 to test on test PyPI, or
 
 ```
-(.env) $ twine upload wheelhouse/*
+(.env) $ twine upload wheelhouse/* dist/*
 [...]
 (.env) $
 ```
 
-for a release.
+for a release. Remember to build the source distribution after building the wheels.
 
 ### Makefile customizations
 The Makefiles used to build the static libraries need a few small tweaks to
@@ -112,27 +149,19 @@ in the following diffs.
 
 ```diff
 diff --git a/build/Linux-x86_64-GCC/Makefile b/build/Linux-x86_64-GCC/Makefile
-index 7affd4b..a7c792b 100644
+index d8e76b1..1b97ea7 100644
 --- a/build/Linux-x86_64-GCC/Makefile
 +++ b/build/Linux-x86_64-GCC/Makefile
-@@ -42,7 +42,7 @@
- SOURCE_DIR ?= ../../source
- PYTHON_DIR ?= ../../python
- SPECIALIZE_TYPE ?= 8086-SSE
--COMPILER ?= gcc
-+COMPILER ?= gcc -std=c11^M
- 
- SOFTPOSIT_OPTS ?= \
-   -DINLINE_LEVEL=5 #\
-@@ -69,7 +69,7 @@ endif
- C_INCLUDES = -I. -I$(SOURCE_DIR)/$(SPECIALIZE_TYPE) -I$(SOURCE_DIR)/include
- OPTIMISATION  = -O2 #-march=core-avx2
- COMPILE_C = \
--  $(COMPILER) -c -Werror-implicit-function-declaration -DSOFTPOSIT_FAST_INT64 \
-+  $(COMPILER) -fPIC -c -Werror-implicit-function-declaration -DSOFTPOSIT_FAST_INT64 \^M
-     $(SOFTPOSIT_OPTS) $(C_INCLUDES) $(OPTIMISATION) \
-     -o $@ 
- MAKELIB = ar crs $@
+@@ -98,6 +98,9 @@ python3: all
+ julia: SOFTPOSIT_OPTS+= -fPIC
+ julia: softposit$(SLIB)
+
++pic: SOFTPOSIT_OPTS+= -fPIC
++pic: softposit$(LIB)
++
+
+
+ OBJS_PRIMITIVES =
 ```
 
 `berkeley-softfloat-3/build/Linux-x86_64/Makefile`

@@ -2,4 +2,4 @@ pip
 wheel
 twine
 keyring
-cython==0.28.5
+cython

@@ -6,7 +6,7 @@ ctypedef union ui64_double:
     uint64_t u;
     double d;
 
-cdef extern from '../berkeley-softfloat-3/source/include/softfloat.h':
+cdef extern from 'include/softfloat.h':
 
     # Transparent types so we can have access to the raw bits.
 

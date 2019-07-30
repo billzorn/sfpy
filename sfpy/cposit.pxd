@@ -6,7 +6,7 @@ from libc.stdint cimport *
 # options used to build it will be long gone.
 DEF SOFTPOSIT_EXACT = 0
 
-cdef extern from '../SoftPosit/source/include/softposit.h':
+cdef extern from 'include/softposit.h':
 
     # Transparent types so we can have access to the raw bits.
 

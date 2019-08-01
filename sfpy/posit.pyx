@@ -1,5 +1,7 @@
+# cython: language_level=3
+
 from libc.stdint cimport *
-cimport cposit
+from . cimport cposit
 
 
 # special values and C helpers

@@ -1,5 +1,7 @@
+# cython: language_level=3
+
 from libc.stdint cimport *
-cimport cfloat
+from . cimport cfloat
 
 
 # low-level access to rounding modes

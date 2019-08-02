@@ -178,6 +178,38 @@ cdef class Float16:
 
         return obj
 
+    @staticmethod
+    def from_i32(int32_t value):
+        """Factory function to create a Float16 object from a signed int32.
+        """
+        cdef Float16 obj = Float16.__new__(Float16)
+        obj._c_float = cfloat.i32_to_f16(value)
+        return obj
+
+    @staticmethod
+    def from_ui32(uint32_t value):
+        """Factory function to create a Float16 object from an unsigned uint32.
+        """
+        cdef Float16 obj = Float16.__new__(Float16)
+        obj._c_float = cfloat.ui32_to_f16(value)
+        return obj
+
+    @staticmethod
+    def from_i64(int64_t value):
+        """Factory function to create a Float16 object from a signed int64.
+        """
+        cdef Float16 obj = Float16.__new__(Float16)
+        obj._c_float = cfloat.i64_to_f16(value)
+        return obj
+
+    @staticmethod
+    def from_ui64(uint64_t value):
+        """Factory function to create a Float16 object from an unsigned uint64.
+        """
+        cdef Float16 obj = Float16.__new__(Float16)
+        obj._c_float = cfloat.ui64_to_f16(value)
+        return obj
+
     # convenience interface for use inside Python
 
     def __init__(self, value):
@@ -376,6 +408,19 @@ cdef class Float16:
         cdef cfloat.float64_t f = cfloat.f16_to_f64(self._c_float)
         return Float64.from_c_float(f)
 
+    # conversion to integer types
+
+    cpdef int32_t to_i32(self):
+        return cfloat.f16_to_i32(self._c_float, cfloat.softfloat_roundingMode, True)
+
+    cpdef uint32_t to_ui32(self):
+        return cfloat.f16_to_ui32(self._c_float, cfloat.softfloat_roundingMode, True)
+
+    cpdef int64_t to_i64(self):
+        return cfloat.f16_to_i64(self._c_float, cfloat.softfloat_roundingMode, True)
+
+    cpdef uint64_t to_ui64(self):
+        return cfloat.f16_to_ui64(self._c_float, cfloat.softfloat_roundingMode, True)
 
 # external, non-method arithmetic
 
@@ -478,6 +523,38 @@ cdef class Float32:
         d.v = ud.u
         obj._c_float = cfloat.f64_to_f32(d)
 
+        return obj
+
+    @staticmethod
+    def from_i32(int32_t value):
+        """Factory function to create a Float32 object from a signed int32.
+        """
+        cdef Float32 obj = Float32.__new__(Float32)
+        obj._c_float = cfloat.i32_to_f32(value)
+        return obj
+
+    @staticmethod
+    def from_ui32(uint32_t value):
+        """Factory function to create a Float32 object from an unsigned uint32.
+        """
+        cdef Float32 obj = Float32.__new__(Float32)
+        obj._c_float = cfloat.ui32_to_f32(value)
+        return obj
+
+    @staticmethod
+    def from_i64(int64_t value):
+        """Factory function to create a Float32 object from a signed int64.
+        """
+        cdef Float32 obj = Float32.__new__(Float32)
+        obj._c_float = cfloat.i64_to_f32(value)
+        return obj
+
+    @staticmethod
+    def from_ui64(uint64_t value):
+        """Factory function to create a Float32 object from an unsigned uint64.
+        """
+        cdef Float32 obj = Float32.__new__(Float32)
+        obj._c_float = cfloat.ui64_to_f32(value)
         return obj
 
     # convenience interface for use inside Python
@@ -677,6 +754,20 @@ cdef class Float32:
     cpdef Float64 to_f64(self):
         cdef cfloat.float64_t f = cfloat.f32_to_f64(self._c_float)
         return Float64.from_c_float(f)
+
+    # conversion to integer types
+
+    cpdef int32_t to_i32(self):
+        return cfloat.f32_to_i32(self._c_float, cfloat.softfloat_roundingMode, True)
+
+    cpdef uint32_t to_ui32(self):
+        return cfloat.f32_to_ui32(self._c_float, cfloat.softfloat_roundingMode, True)
+
+    cpdef int64_t to_i64(self):
+        return cfloat.f32_to_i64(self._c_float, cfloat.softfloat_roundingMode, True)
+
+    cpdef uint64_t to_ui64(self):
+        return cfloat.f32_to_ui64(self._c_float, cfloat.softfloat_roundingMode, True)
 
 ########
 # integer conversions
@@ -904,6 +995,38 @@ cdef class Float64:
 
         return obj
 
+    @staticmethod
+    def from_i32(int32_t value):
+        """Factory function to create a Float64 object from a signed int32.
+        """
+        cdef Float64 obj = Float64.__new__(Float64)
+        obj._c_float = cfloat.i32_to_f64(value)
+        return obj
+
+    @staticmethod
+    def from_ui32(uint32_t value):
+        """Factory function to create a Float64 object from an unsigned uint32.
+        """
+        cdef Float64 obj = Float64.__new__(Float64)
+        obj._c_float = cfloat.ui32_to_f64(value)
+        return obj
+
+    @staticmethod
+    def from_i64(int64_t value):
+        """Factory function to create a Float64 object from a signed int64.
+        """
+        cdef Float64 obj = Float64.__new__(Float64)
+        obj._c_float = cfloat.i64_to_f64(value)
+        return obj
+
+    @staticmethod
+    def from_ui64(uint64_t value):
+        """Factory function to create a Float64 object from an unsigned uint64.
+        """
+        cdef Float64 obj = Float64.__new__(Float64)
+        obj._c_float = cfloat.ui64_to_f64(value)
+        return obj
+
     # convenience interface for use inside Python
 
     def __init__(self, value):
@@ -1101,6 +1224,19 @@ cdef class Float64:
         cdef cfloat.float32_t f = cfloat.f64_to_f32(self._c_float)
         return Float32.from_c_float(f)
 
+    # conversion to integer types
+
+    cpdef int32_t to_i32(self):
+        return cfloat.f64_to_i32(self._c_float, cfloat.softfloat_roundingMode, True)
+
+    cpdef uint32_t to_ui32(self):
+        return cfloat.f64_to_ui32(self._c_float, cfloat.softfloat_roundingMode, True)
+
+    cpdef int64_t to_i64(self):
+        return cfloat.f64_to_i64(self._c_float, cfloat.softfloat_roundingMode, True)
+
+    cpdef uint64_t to_ui64(self):
+        return cfloat.f64_to_ui64(self._c_float, cfloat.softfloat_roundingMode, True)
 
 # external, non-method arithmetic
 

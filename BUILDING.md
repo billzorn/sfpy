@@ -142,42 +142,14 @@ for a release. Remember to build the source distribution after building the whee
 
 ### Makefile customizations
 The Makefiles used to build the static libraries need a few small tweaks to
-make sure that all the right flags are given to gcc. The changes are shown
-in the following diffs.
+make sure that all the right flags are given to gcc. The changes are included
+in the patch files `softposit_sfpy_build.patch` and `softfloat_sfpy_build.patch`.
 
-`SoftPosit/build/Linux-x86_64/Makefile`
+The patches can be applied in the standard way. Make sure the submodules are up to date!
 
-```diff
-diff --git a/build/Linux-x86_64-GCC/Makefile b/build/Linux-x86_64-GCC/Makefile
-index d8e76b1..1b97ea7 100644
---- a/build/Linux-x86_64-GCC/Makefile
-+++ b/build/Linux-x86_64-GCC/Makefile
-@@ -98,6 +98,9 @@ python3: all
- julia: SOFTPOSIT_OPTS+= -fPIC
- julia: softposit$(SLIB)
-
-+pic: SOFTPOSIT_OPTS+= -fPIC
-+pic: softposit$(LIB)
-+
-
-
- OBJS_PRIMITIVES =
 ```
-
-`berkeley-softfloat-3/build/Linux-x86_64/Makefile`
-
-```diff
-diff --git a/build/Linux-x86_64-GCC/Makefile b/build/Linux-x86_64-GCC/Makefile
-index 2ee5dad..b175964 100644
---- a/build/Linux-x86_64-GCC/Makefile
-+++ b/build/Linux-x86_64-GCC/Makefile
-@@ -45,7 +45,7 @@ DELETE = rm -f
- C_INCLUDES = -I. -I$(SOURCE_DIR)/$(SPECIALIZE_TYPE) -I$(SOURCE_DIR)/include
- COMPILE_C = \
-   gcc -c -Werror-implicit-function-declaration -DSOFTFLOAT_FAST_INT64 \
--    $(SOFTFLOAT_OPTS) $(C_INCLUDES) -O2 -o $@
-+    $(SOFTFLOAT_OPTS) $(C_INCLUDES) -O2 -fPIC -o $@
- MAKELIB = ar crs $@
-
- OBJ = .o
+$ cd SoftPosit
+$ git apply ../softposit_sfpy_build.patch
+$ cd ../berkeley-softfloat-3
+$ git apply ../softfloat_sfpy_build.patch
 ```

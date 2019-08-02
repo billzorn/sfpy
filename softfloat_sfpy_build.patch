@@ -1,0 +1,13 @@
+diff --git a/build/Linux-x86_64-GCC/Makefile b/build/Linux-x86_64-GCC/Makefile
+index 2ee5dad..b175964 100644
+--- a/build/Linux-x86_64-GCC/Makefile
++++ b/build/Linux-x86_64-GCC/Makefile
+@@ -45,7 +45,7 @@ DELETE = rm -f
+ C_INCLUDES = -I. -I$(SOURCE_DIR)/$(SPECIALIZE_TYPE) -I$(SOURCE_DIR)/include
+ COMPILE_C = \
+   gcc -c -Werror-implicit-function-declaration -DSOFTFLOAT_FAST_INT64 \
+-    $(SOFTFLOAT_OPTS) $(C_INCLUDES) -O2 -o $@
++    $(SOFTFLOAT_OPTS) $(C_INCLUDES) -O2 -fPIC -o $@
+ MAKELIB = ar crs $@
+ 
+ OBJ = .o

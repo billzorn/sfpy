@@ -1,0 +1,14 @@
+diff --git a/build/Linux-x86_64-GCC/Makefile b/build/Linux-x86_64-GCC/Makefile
+index d8e76b1..1b97ea7 100644
+--- a/build/Linux-x86_64-GCC/Makefile
++++ b/build/Linux-x86_64-GCC/Makefile
+@@ -98,6 +98,9 @@ python3: all
+ julia: SOFTPOSIT_OPTS+= -fPIC
+ julia: softposit$(SLIB)
+ 
++pic: SOFTPOSIT_OPTS+= -fPIC
++pic: softposit$(LIB)
++
+ 
+ 
+ OBJS_PRIMITIVES = 

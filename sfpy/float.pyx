@@ -4,6 +4,30 @@ from libc.stdint cimport *
 from . cimport cfloat
 
 
+# low-level access to tininess detection
+
+TININESS_BEFORE_ROUNDING = cfloat.softfloat_tininess_beforeRounding
+TININESS_AFTER_ROUNDING = cfloat.softfloat_tininess_afterRounding
+
+cpdef uint_fast8_t tininess_get():
+    return cfloat.softfloat_detectTininess
+
+cpdef void tininess_set(uint_fast8_t tininess):
+    cfloat.softfloat_detectTininess = tininess
+
+cpdef bint tininess_is_before_rounding():
+    return cfloat.softfloat_detectTininess == cfloat.softfloat_tininess_beforeRounding
+
+cpdef void tininess_set_before_rounding():
+    cfloat.softfloat_detectTininess = cfloat.softfloat_tininess_beforeRounding
+
+cpdef bint tininess_is_after_rounding():
+    return cfloat.softfloat_detectTininess == cfloat.softfloat_tininess_afterRounding
+
+cpdef void tininess_set_after_rounding():
+    cfloat.softfloat_detectTininess = cfloat.softfloat_tininess_afterRounding
+
+
 # low-level access to rounding modes
 
 ROUND_NEAREST_EVEN = cfloat.softfloat_round_near_even

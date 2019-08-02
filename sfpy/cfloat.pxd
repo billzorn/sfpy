@@ -25,10 +25,10 @@ cdef extern from 'include/softfloat.h':
     # /*----------------------------------------------------------------------------
     # | Software floating-point underflow tininess-detection mode.
     # *----------------------------------------------------------------------------*/
-    # extern uint_fast8_t softfloat_detectTininess; # THREAD_LOCAL
-    # cdef enum:
-    #     softfloat_tininess_beforeRounding = 0
-    #     softfloat_tininess_afterRounding  = 1
+    extern uint_fast8_t softfloat_detectTininess; # THREAD_LOCAL
+    cdef enum:
+        softfloat_tininess_beforeRounding = 0
+        softfloat_tininess_afterRounding  = 1
 
     # /*----------------------------------------------------------------------------
     # | Software floating-point rounding mode.  (Mode "odd" is supported only if
